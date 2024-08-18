@@ -26,5 +26,3 @@ struct MonthlyTabViewPage: View{
         .tag(3)
     }
 }
-
-
