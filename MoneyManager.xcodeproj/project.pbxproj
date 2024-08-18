@@ -18,6 +18,7 @@
 		ACA2D1852C71845000447336 /* Accounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1842C71845000447336 /* Accounts.swift */; };
 		ACA2D1872C71863600447336 /* Investments.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1862C71863600447336 /* Investments.swift */; };
 		ACA2D1892C71866D00447336 /* Monthly.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1882C71866D00447336 /* Monthly.swift */; };
+		ACA2D18B2C7295AC00447336 /* Playground.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D18A2C7295AC00447336 /* Playground.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		ACA2D1842C71845000447336 /* Accounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accounts.swift; sourceTree = "<group>"; };
 		ACA2D1862C71863600447336 /* Investments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Investments.swift; sourceTree = "<group>"; };
 		ACA2D1882C71866D00447336 /* Monthly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monthly.swift; sourceTree = "<group>"; };
+		ACA2D18A2C7295AC00447336 /* Playground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playground.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				ACA2D15C2C7170EA00447336 /* Preview Content */,
 				ACA2D1822C71844100447336 /* Dashboard.swift */,
 				ACA2D1842C71845000447336 /* Accounts.swift */,
+				ACA2D18A2C7295AC00447336 /* Playground.swift */,
 			);
 			path = MoneyManager;
 			sourceTree = "<group>";
@@ -273,6 +276,7 @@
 				ACA2D1852C71845000447336 /* Accounts.swift in Sources */,
 				ACA2D1832C71844100447336 /* Dashboard.swift in Sources */,
 				ACA2D1892C71866D00447336 /* Monthly.swift in Sources */,
+				ACA2D18B2C7295AC00447336 /* Playground.swift in Sources */,
 				ACA2D1572C7170E900447336 /* MoneyManagerApp.swift in Sources */,
 				ACA2D1872C71863600447336 /* Investments.swift in Sources */,
 			);

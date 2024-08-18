@@ -64,6 +64,7 @@ struct AccountsTabViewPage: View {
                         }
                     }
                 }
+                .padding()
             }
             .navigationTitle("Accounts")
             .sheet(isPresented: $showingDetails) {

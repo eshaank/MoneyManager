@@ -23,6 +23,7 @@ struct SelectView: View {
             Accounts() // Accounts page
             Investments() // Investments page
             Monthly() // Monthly page
+            Playground() // A place to play around with styling and looks and stuff
         }
         .onAppear(perform: {
             //2
