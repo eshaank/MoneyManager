@@ -14,6 +14,10 @@
 		ACA2D1682C7170EA00447336 /* MoneyManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1672C7170EA00447336 /* MoneyManagerTests.swift */; };
 		ACA2D1722C7170EA00447336 /* MoneyManagerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1712C7170EA00447336 /* MoneyManagerUITests.swift */; };
 		ACA2D1742C7170EA00447336 /* MoneyManagerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1732C7170EA00447336 /* MoneyManagerUITestsLaunchTests.swift */; };
+		ACA2D1832C71844100447336 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1822C71844100447336 /* Dashboard.swift */; };
+		ACA2D1852C71845000447336 /* Accounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1842C71845000447336 /* Accounts.swift */; };
+		ACA2D1872C71863600447336 /* Investments.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1862C71863600447336 /* Investments.swift */; };
+		ACA2D1892C71866D00447336 /* Monthly.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1882C71866D00447336 /* Monthly.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +48,10 @@
 		ACA2D16D2C7170EA00447336 /* MoneyManagerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoneyManagerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACA2D1712C7170EA00447336 /* MoneyManagerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManagerUITests.swift; sourceTree = "<group>"; };
 		ACA2D1732C7170EA00447336 /* MoneyManagerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManagerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		ACA2D1822C71844100447336 /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
+		ACA2D1842C71845000447336 /* Accounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accounts.swift; sourceTree = "<group>"; };
+		ACA2D1862C71863600447336 /* Investments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Investments.swift; sourceTree = "<group>"; };
+		ACA2D1882C71866D00447336 /* Monthly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monthly.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,9 +103,12 @@
 			isa = PBXGroup;
 			children = (
 				ACA2D1562C7170E900447336 /* MoneyManagerApp.swift */,
+				ACA2D1882C71866D00447336 /* Monthly.swift */,
 				ACA2D1582C7170E900447336 /* ContentView.swift */,
 				ACA2D15A2C7170EA00447336 /* Assets.xcassets */,
 				ACA2D15C2C7170EA00447336 /* Preview Content */,
+				ACA2D1822C71844100447336 /* Dashboard.swift */,
+				ACA2D1842C71845000447336 /* Accounts.swift */,
 			);
 			path = MoneyManager;
 			sourceTree = "<group>";
@@ -106,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				ACA2D15D2C7170EA00447336 /* Preview Assets.xcassets */,
+				ACA2D1862C71863600447336 /* Investments.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -258,7 +270,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACA2D1592C7170E900447336 /* ContentView.swift in Sources */,
+				ACA2D1852C71845000447336 /* Accounts.swift in Sources */,
+				ACA2D1832C71844100447336 /* Dashboard.swift in Sources */,
+				ACA2D1892C71866D00447336 /* Monthly.swift in Sources */,
 				ACA2D1572C7170E900447336 /* MoneyManagerApp.swift in Sources */,
+				ACA2D1872C71863600447336 /* Investments.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

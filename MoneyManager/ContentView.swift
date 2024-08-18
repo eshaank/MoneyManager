@@ -9,18 +9,20 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
+        SelectView()
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+struct SelectView: View {
+    @State private var selectedIndex: Int = 0
+    
+    var body: some View {
+        TabView(selection: $selectedIndex) {
+            
+            Dashboard() // Dashboard page
+            Accounts() // Accounts page
+            Investments() // Investments page
+            Monthly() // Monthly page
+        }
     }
 }
