@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: Models
+
 struct Playground: View{
     var body: some View{
         NavigationStack() {
@@ -21,98 +23,175 @@ struct Playground: View{
 
 }
 
-struct CreditCard: Identifiable {
-    var id = UUID() // Unique ID for each card
+struct FinancialAccount: Identifiable {
+    var id = UUID()
     var name: String
     var balance: String
-    var cardNumber: String
 }
+
+// MARK: - Views
 
 struct FinancialAccountsView: View {
     @State private var isCreditCardsExpanded: Bool = false
     @State private var isCheckingExpanded: Bool = false
     @State private var isSavingsExpanded: Bool = false
-
-    // Sample data for credit cards
-    let creditCards = [
-        CreditCard(name: "Visa", balance: "$2000", cardNumber: "**** 1234"),
-        CreditCard(name: "MasterCard", balance: "$500", cardNumber: "**** 5678"),
-        CreditCard(name: "Amex", balance: "$1500", cardNumber: "**** 9876")
-    ]
     
-    // Sample data for checking accounts
-    let checkingAccounts = [
-        CreditCard(name: "Chase Checking", balance: "$3000", cardNumber: "**** 4321"),
-        CreditCard(name: "Bank of America Checking", balance: "$1500", cardNumber: "**** 8765")
-    ]
+    @State private var newAccount = NewAccount()
     
-    // Sample data for savings accounts
-    let savingsAccounts = [
-        CreditCard(name: "Ally Savings", balance: "$5000", cardNumber: "**** 1111"),
-        CreditCard(name: "Wells Fargo Savings", balance: "$2500", cardNumber: "**** 2222")
-    ]
+    @State private var creditCards: [FinancialAccount] = [FinancialAccount(name: "Visa", balance: "$2000")]
+    
+    @State private var checkingAccounts: [FinancialAccount] = []
+    
+    @State private var savingsAccounts: [FinancialAccount] = []
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                DisclosureGroup("Credit Cards", isExpanded: $isCreditCardsExpanded) {
-                    ForEach(creditCards) { card in
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(card.name)
-                                .font(.headline)
-                            Text("Balance: \(card.balance)")
-                                .font(.subheadline)
-                            Text("Card Number: \(card.cardNumber)")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                        }
-                        .padding(.vertical, 5)
-                    }
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding(.horizontal)
-
-                DisclosureGroup("Checking Accounts", isExpanded: $isCheckingExpanded) {
-                    ForEach(checkingAccounts) { account in
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(account.name)
-                                .font(.headline)
-                            Text("Balance: \(account.balance)")
-                                .font(.subheadline)
-                            Text("Account Number: \(account.cardNumber)")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                        }
-                        .padding(.vertical, 5)
-                    }
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding(.horizontal)
-
-                DisclosureGroup("Savings Accounts", isExpanded: $isSavingsExpanded) {
-                    ForEach(savingsAccounts) { account in
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(account.name)
-                                .font(.headline)
-                            Text("Balance: \(account.balance)")
-                                .font(.subheadline)
-                            Text("Account Number: \(account.cardNumber)")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                        }
-                        .padding(.vertical, 5)
-                    }
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding(.horizontal)
+                AddAccountForm(newAccount: $newAccount, onAddAccount: addNewAccount)
+                
+                AccountDisclosureGroup(
+                    title: "Credit Cards",
+                    isExpanded: $isCreditCardsExpanded,
+                    accounts: creditCards,
+                    titleColor: .red
+                )
+                
+                AccountDisclosureGroup(
+                    title: "Checking Accounts",
+                    isExpanded: $isCheckingExpanded,
+                    accounts: checkingAccounts,
+                    titleColor: .purple
+                )
+                
+                AccountDisclosureGroup(
+                    title: "Savings Accounts",
+                    isExpanded: $isSavingsExpanded,
+                    accounts: savingsAccounts,
+                    titleColor: .mint
+                )
             }
             .padding(.top)
         }
+    }
+    
+    // MARK: - Functions
+    
+    private func addNewAccount() {
+        let newAccountEntry = FinancialAccount(name: newAccount.name, balance: newAccount.balance)
+        
+        switch newAccount.type {
+        case .creditCard:
+            creditCards.append(newAccountEntry)
+        case .checkingAccount:
+            checkingAccounts.append(newAccountEntry)
+        case .savingsAccount:
+            savingsAccounts.append(newAccountEntry)
+        }
+        
+        newAccount.reset()
+    }
+}
+
+// MARK: - AddAccountForm View
+
+struct AddAccountForm: View {
+    @Binding var newAccount: NewAccount
+    var onAddAccount: () -> Void
+    
+    var body: some View {
+        VStack {
+            Text("Add New Account")
+                .font(.headline)
+                .padding(.bottom, 10)
+            
+            Picker("Account Type", selection: $newAccount.type) {
+                ForEach(AccountType.allCases, id: \.self) { type in
+                    Text(type.rawValue.capitalized).tag(type)
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding(.bottom, 10)
+            
+            TextField("Account Name", text: $newAccount.name)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.bottom, 10)
+            
+            TextField("Account Balance", text: $newAccount.balance)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .keyboardType(.decimalPad)
+                .padding(.bottom, 10)
+            
+            Button(action: onAddAccount) {
+                Text("Add Account")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(8)
+        .padding(.horizontal)
+    }
+}
+
+// MARK: - AccountDisclosureGroup View
+
+struct AccountDisclosureGroup: View {
+    let title: String
+    @Binding var isExpanded: Bool
+    let accounts: [FinancialAccount]
+    let titleColor: Color
+    
+    var body: some View {
+        DisclosureGroup(title, isExpanded: $isExpanded) {
+            ForEach(accounts) { account in
+                VStack(alignment: .leading) {
+                    Text(account.name)
+                        .font(.headline)
+                        .foregroundColor(titleColor)
+                    Text("Balance: \(account.balance)")
+                        .font(.subheadline)
+                        .foregroundColor(titleColor)
+                }
+                .padding()
+                .background(Color.gray.opacity(0.2))
+                .cornerRadius(8)
+                
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .foregroundColor(Color(.systemBlue))
+        .bold()
+        .cornerRadius(8)
+        .padding(.horizontal)
+    }
+}
+
+// MARK: - Supporting Models
+
+struct NewAccount {
+    var type: AccountType = .creditCard
+    var name: String = ""
+    var balance: String = ""
+    
+    mutating func reset() {
+        name = ""
+        balance = ""
+    }
+}
+
+enum AccountType: String, CaseIterable {
+    case creditCard = "Credit Card"
+    case checkingAccount = "Checking Account"
+    case savingsAccount = "Savings Account"
+}
+
+struct FinancialAccountsView_Previews: PreviewProvider {
+    static var previews: some View {
+        FinancialAccountsView()
     }
 }

@@ -27,7 +27,7 @@ struct SelectView: View {
         }
         .onAppear(perform: {
             //2
-            UITabBar.appearance().unselectedItemTintColor = .systemBrown
+            UITabBar.appearance().unselectedItemTintColor = .systemPink
             //3
             UITabBarItem.appearance().badgeColor = .systemPink
             //4
