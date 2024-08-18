@@ -24,5 +24,17 @@ struct SelectView: View {
             Investments() // Investments page
             Monthly() // Monthly page
         }
+        .onAppear(perform: {
+            //2
+            UITabBar.appearance().unselectedItemTintColor = .systemBrown
+            //3
+            UITabBarItem.appearance().badgeColor = .systemPink
+            //4
+            UITabBar.appearance().backgroundColor = .systemGray4.withAlphaComponent(0.4)
+            //5
+            UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemPink]
+            //UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
+            //Above API will kind of override other behaviour and bring the default UI for TabView
+        })
     }
 }
