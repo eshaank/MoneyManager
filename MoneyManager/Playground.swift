@@ -43,7 +43,7 @@ struct FinancialAccountsView: View {
     
     @State private var creditCards: [FinancialAccount] = [
         FinancialAccount(name: "Visa", balance: 2000),
-        FinancialAccount(name: "Somethings Long", balance: 2000)]
+        FinancialAccount(name: "Long Account Name", balance: 2000)]
     
     @State private var checkingAccounts: [FinancialAccount] = []
     
@@ -53,8 +53,7 @@ struct FinancialAccountsView: View {
         ScrollView {
             VStack(alignment: .leading) {
                 AccountDisclosureGroup(
-                    title: Text("Credit Cards").font(.title3) +
-                    Text(" $\(accountTotals(accounts: creditCards))").font(.subheadline),
+                    title: accountDisclosureGroupTitle(title: "Credit Cards", account: creditCards),
                     isExpanded: $isCreditCardsExpanded,
                     accounts: creditCards,
                     titleColor: .purple,
@@ -65,8 +64,7 @@ struct FinancialAccountsView: View {
                 )
                 
                 AccountDisclosureGroup(
-                    title: Text("Credit Cards").font(.headline) +
-                            Text(" $\(accountTotals(accounts: checkingAccounts))").font(.subheadline),
+                    title: accountDisclosureGroupTitle(title: "Checkings", account: checkingAccounts),
                     isExpanded: $isCheckingExpanded,
                     accounts: checkingAccounts,
                     titleColor: .purple,
@@ -77,8 +75,7 @@ struct FinancialAccountsView: View {
                 )
 
                 AccountDisclosureGroup(
-                    title: Text("Credit Cards").font(.headline) +
-                            Text(" $\(accountTotals(accounts: savingsAccounts))").font(.subheadline),
+                    title: accountDisclosureGroupTitle(title: "Savings", account: savingsAccounts),
                     isExpanded: $isSavingsExpanded,
                     accounts: savingsAccounts,
                     titleColor: .purple,
@@ -87,13 +84,6 @@ struct FinancialAccountsView: View {
                         showAddAccountSheet = true
                     }
                 )
-//                VStack {
-//                    // Display totals for each category
-//                    Text("Total Credit Card Balance: \(calculateAccountTotals(accounts: creditCards), specifier: "%.2f")")
-//                    Text("Total Checking Account Balance: \(calculateAccountTotals(accounts: checkingAccounts), specifier: "%.2f")")
-//                    Text("Total Savings Account Balance: \(calculateAccountTotals(accounts: savingsAccounts), specifier: "%.2f")")
-//                    // You can display more account details or other views here
-//                }
             }
             .padding(.top)
         }
@@ -120,7 +110,18 @@ struct FinancialAccountsView: View {
     
     private func accountTotals(accounts: [FinancialAccount]) -> String {
         let total = accounts.reduce(0) { $0 + $1.balance }
-        return String(format: "%.2f", total)
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+
+        return formatter.string(from: NSNumber(value: total)) ?? "0.00"
+    }
+    
+    private func accountDisclosureGroupTitle(title: String, account: [FinancialAccount]) -> Text{
+        return Text(title).font(.title3) +
+        Text(" $\(accountTotals(accounts: account))").font(.subheadline)
     }
 }
 
@@ -179,37 +180,43 @@ struct AccountDisclosureGroup: View {
     var onAddAccount: () -> Void
     
     var body: some View {
-        DisclosureGroup(isExpanded: $isExpanded) {
-            ForEach(accounts) { account in
-                VStack(alignment: .leading) {
-                    Text(account.name)
-                        .font(.headline)
-                        .foregroundColor(titleColor)
-                    Text("Balance: $\(account.balance, specifier: "%.2f")")
-                        .font(.subheadline)
-                        .foregroundColor(titleColor)
+        HStack(alignment: .firstTextBaseline) { // Center align the content vertically
+            DisclosureGroup(isExpanded: $isExpanded) {
+                ForEach(accounts) { account in
+                    VStack() {
+                        Text(account.name)
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                        Text("$\(account.balance, specifier: "%.2f")")
+                            .font(.subheadline)
+                            .foregroundColor(titleColor)
+                        }
+                        .padding(.vertical, 5)
                 }
-                .padding(.vertical)
+                .padding(.leading) // Ensure content within DisclosureGroup has consistent left padding
+            } label: {
+                title
+                    .foregroundColor(Color.mint)
             }
+            .padding()
+            .bold()
+            .padding(.horizontal)
+            
+            Spacer() // Pushes the button to the far right
+            
             Button(action: onAddAccount) {
-                HStack {
-                    Image(systemName: "plus.circle.fill")
-                    Text("Add Account")
-                }
-                .foregroundColor(.blue)
-                .padding(.top, 5)
+                Text("Add")
+                    .foregroundColor(.blue)
             }
-        } label: {
-            title
-                .foregroundColor(Color.mint)
+            .padding(.trailing) // Add padding to the right for spacing
         }
-        .padding()
+        .background(Color(.systemGray6))
         .foregroundColor(Color(.systemBlue))
         .bold()
         .cornerRadius(8)
-        .padding(.horizontal)
     }
 }
+
 
 // MARK: - Supporting Models
 

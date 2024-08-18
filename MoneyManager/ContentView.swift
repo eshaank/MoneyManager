@@ -33,7 +33,7 @@ struct SelectView: View {
             //4
             UITabBar.appearance().backgroundColor = .systemGray4.withAlphaComponent(0.4)
             //5
-            UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemPink]
+            UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.gray]
             //UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
             //Above API will kind of override other behaviour and bring the default UI for TabView
         })
