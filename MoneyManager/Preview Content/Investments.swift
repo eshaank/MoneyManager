@@ -22,7 +22,7 @@ struct InvestmentsTabViewPage: View{
                 .navigationTitle("Investments")
         }
         .tabItem {
-            Label("Investments", systemImage: "gauge")
+            Label("Investments", systemImage: "dog")
         }
         .tag(0)
     }
