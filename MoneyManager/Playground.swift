@@ -7,32 +7,16 @@
 
 import SwiftUI
 
-// MARK: Playground
+// MARK: - Models
 
-//struct Playground: View{
-//    var body: some View{
-//        NavigationStack() {
-//            FinancialAccountsView()
-//                .navigationTitle("Playground")
-//        }
-//        .tabItem {
-//            Label("Playground", systemImage: "hammer")
-//        }
-//        .tag(4)
-//    }
-//
-//}
-//
-//// MARK: - Models
-//
-//struct FinancialAccount1: Identifiable {
-//    var id = UUID()
-//    var name: String
-//    var balance: Double
-//}
-//
-//// MARK: - Views
-//
+struct FinancialAccount: Identifiable {
+    var id = UUID()
+    var name: String
+    var balance: Double
+}
+
+// MARK: - Views
+
 //struct FinancialAccountsView: View {
 //    @State private var isCreditCardsExpanded: Bool = true
 //    @State private var isCheckingExpanded: Bool = true
@@ -124,54 +108,54 @@ import SwiftUI
 //        Text(" $\(accountTotals(accounts: account))").font(.subheadline)
 //    }
 //}
-//
-//// MARK: - AddAccountSheet View
-//
-//struct AddAccountSheet: View {
-//    @Environment(\.presentationMode) var presentationMode
-//    @State private var name: String = ""
-//    @State private var balance: String = ""
-//
-//    var accountType: AccountType
-//    var onAddAccount: (FinancialAccount) -> Void
-//
-//    var body: some View {
-//        NavigationView {
-//            Form {
-//                Section(header: Text("Account Details")) {
-//                    TextField("Account Name", text: $name)
-//
-//                    TextField("Account Balance", text: $balance)
-//                        .keyboardType(.decimalPad)
-//                }
-//            }
-//            .navigationBarTitle("Add \(accountType.rawValue.capitalized)", displayMode: .inline)
-//            .navigationBarItems(
-//                leading: Button("Cancel") {
-//                    presentationMode.wrappedValue.dismiss()
-//                },
-//                trailing: Button("Save") {
-//                    if validateFields() {
-//                        let formattedBalance = Double(balance) ?? 0
-//                        let newAccount = FinancialAccount(name: name, balance: formattedBalance)
-//                        onAddAccount(newAccount)
-//                        presentationMode.wrappedValue.dismiss()
-//                    }
-//                }
-//                .disabled(!validateFields())
-//            )
-//        }
-//    }
-//
-//    // MARK: - Validation
-//
-//    private func validateFields() -> Bool {
-//        return !name.isEmpty && !balance.isEmpty && Double(balance) != nil
-//    }
-//}
-//
-//// MARK: - AccountDisclosureGroup View
-//
+
+// MARK: - AddAccountSheet View
+
+struct AddAccountSheet: View {
+    @Environment(\.presentationMode) var presentationMode
+    @State private var name: String = ""
+    @State private var balance: String = ""
+
+    var accountType: AccountType
+    var onAddAccount: (FinancialAccount) -> Void
+
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("Account Details")) {
+                    TextField("Account Name", text: $name)
+
+                    TextField("Account Balance", text: $balance)
+                        .keyboardType(.decimalPad)
+                }
+            }
+            .navigationBarTitle("Add \(accountType.rawValue.capitalized)", displayMode: .inline)
+            .navigationBarItems(
+                leading: Button("Cancel") {
+                    presentationMode.wrappedValue.dismiss()
+                },
+                trailing: Button("Save") {
+                    if validateFields() {
+                        let formattedBalance = Double(balance) ?? 0
+                        let newAccount = FinancialAccount(name: name, balance: formattedBalance)
+                        onAddAccount(newAccount)
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+                .disabled(!validateFields())
+            )
+        }
+    }
+
+    // MARK: - Validation
+
+    private func validateFields() -> Bool {
+        return !name.isEmpty && !balance.isEmpty && Double(balance) != nil
+    }
+}
+
+// MARK: - AccountDisclosureGroup View
+
 //struct AccountDisclosureGroup: View {
 //    let title: Text
 //    @Binding var isExpanded: Bool
@@ -216,12 +200,12 @@ import SwiftUI
 //        .cornerRadius(8)
 //    }
 //}
-//
-//
-//// MARK: - Supporting Models
-//
-//enum AccountType1: String, CaseIterable {
-//    case creditCard = "Credit Card"
-//    case checkingAccount = "Checking Account"
-//    case savingsAccount = "Savings Account"
-//}
+
+
+// MARK: - Supporting Models
+
+enum AccountType: String, CaseIterable {
+    case creditCard = "Credit Card"
+    case checkingAccount = "Checking Account"
+    case savingsAccount = "Savings Account"
+}

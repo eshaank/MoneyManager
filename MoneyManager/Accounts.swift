@@ -1,172 +1,152 @@
 import SwiftUI
 
-// MARK: - Main View
-
 struct Accounts: View {
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
-        WalletView()
+        FinancialView()
             .tabItem {
-                Label("Accounts", systemImage: "bank")
+                Label("Accounts", systemImage: "hammer")
             }
             .navigationTitle("Accounts")
     }
 }
 
-// MARK: - Wallet View
+struct FinancialView: View{
+    @State private var isCreditCardsExpanded: Bool = true
+    @State private var isCheckingExpanded: Bool = true
+    @State private var isSavingsExpanded: Bool = true
+
+    @State private var showAddAccountSheet: Bool = false
+    @State private var selectedAccountType: AccountType = .creditCard
+
+    @State private var creditCards: [FinancialAccount] = [
+        FinancialAccount(name: "Visa", balance: 2000),
+        FinancialAccount(name: "Wells Fargo Active Cash", balance: 2000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000)]
+
+    @State private var checkingAccounts: [FinancialAccount] = [FinancialAccount(name: "Everything", balance: 2000)]
+
+    @State private var savingsAccounts: [FinancialAccount] = [FinancialAccount(name: "Nothing", balance: 2000)]
+    
+    var body: some View{
+        TabView {
+            WalletView(title: "Credit Cards",
+                       accounts: creditCards)
+            WalletView(title: "Savings",
+                       accounts: savingsAccounts)
+            WalletView(title: "Checkings",
+                       accounts: checkingAccounts)
+        }
+        .tabViewStyle(PageTabViewStyle())
+
+    }
+}
 
 struct WalletView: View {
     @State private var selectedCardIndex: Int? = nil
     @State private var isCardExpanded: Bool = false
     
-    @State private var creditCards: [FinancialAccount] = [
-        FinancialAccount(name: "Visa", balance: 2000),
-        FinancialAccount(name: "Long Account Name", balance: 2000)
-    ]
-    
-    @State private var checkingAccounts: [FinancialAccount] = []
-    @State private var savingsAccounts: [FinancialAccount] = []
-    
-    @State private var showAddAccountSheet: Bool = false
-    @State private var selectedAccountType: AccountType = .creditCard
+    let title: String
+    let accounts: [FinancialAccount]
 
     var body: some View {
-        ZStack {
-            if !isCardExpanded {
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: -125) { // Adjust spacing for overlap
-                        ForEach(0..<3) { index in
-                            CardView(cardTitle: index, balance: "$\(accountTotals(accounts: accounts(for: index)))", isSelected: selectedCardIndex == index)
-                                .padding(.horizontal)
-                                .zIndex(selectedCardIndex == index ? 1 : 0)
-                                .onTapGesture {
-                                    withAnimation(.spring()) {
-                                        selectedCardIndex = selectedCardIndex == index ? nil : index
-                                        isCardExpanded = selectedCardIndex != nil
+        GeometryReader { geometry in
+            ZStack {
+                if !isCardExpanded {
+                    ScrollView(.vertical, showsIndicators: false) {
+                        Text(title)
+                            .font(.largeTitle)
+                        VStack(spacing: -geometry.size.height / 6) { // Dynamic spacing based on screen height
+                            ForEach(accounts.indices, id: \.self) { index in
+                                let account = accounts[index]
+                                CardView(cardTitle: account.name, isSelected: selectedCardIndex == index)
+                                    .padding(.horizontal)
+                                    .frame(height: geometry.size.height / 4) // Dynamic card height
+                                    .zIndex(selectedCardIndex == index ? 1 : 0)
+                                    .onTapGesture {
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            selectedCardIndex = selectedCardIndex == index ? nil : index
+                                            isCardExpanded = selectedCardIndex != nil
+                                        }
                                     }
-                                }
+                            }
+                        }
+                        .padding(.top, geometry.size.height / 10) // Dynamic top padding
+                    }
+                } else if let index = selectedCardIndex {
+                    let selectedAccount = accounts[index]
+                    ExpandedCardView(cardTitle: selectedAccount.name,
+                                     balance: "$\(formatNumber(number: selectedAccount.balance))",
+                                     geometry: geometry) {
+                        withAnimation(.spring()) {
+                            isCardExpanded = false
+                            selectedCardIndex = nil
                         }
                     }
-                    .padding(.top, 50)
+                    .zIndex(2)
                 }
-                .background(Color(.systemGray6).edgesIgnoringSafeArea(.all))
-            } else if let index = selectedCardIndex {
-                ExpandedCardView(cardTitle: index, balance: "$\(accountTotals(accounts: accounts(for: index)))") {
-                    withAnimation(.spring()) {
-                        isCardExpanded = false
-                        selectedCardIndex = nil
-                    }
-                }
-                .zIndex(2)
             }
         }
-        accountDisclosureGroupTitle(title: accountTypeTitle(for: index), account: accounts(for: index))
-        .sheet(isPresented: $showAddAccountSheet) {
-            AddAccountSheet(
-                accountType: selectedAccountType,
-                onAddAccount: addNewAccount
-            )
-        }
     }
 
-    // MARK: - Utility Functions
-    
-    private func accountTypeTitle(for index: Int) -> String {
-        switch index {
-        case 0: return "Credit Cards"
-        case 1: return "Checking Accounts"
-        case 2: return "Savings Accounts"
-        default: return ""
-        }
-    }
-
-    private func accounts(for index: Int) -> [FinancialAccount] {
-        switch index {
-        case 0: return creditCards
-        case 1: return checkingAccounts
-        case 2: return savingsAccounts
-        default: return []
-        }
-    }
-
-    private func addNewAccount(account: FinancialAccount) {
-        switch selectedAccountType {
-        case .creditCard:
-            creditCards.append(account)
-        case .checkingAccount:
-            checkingAccounts.append(account)
-        case .savingsAccount:
-            savingsAccounts.append(account)
-        }
-    }
-    
-    private func accountTotals(accounts: [FinancialAccount]) -> String {
-        let total = accounts.reduce(0) { $0 + $1.balance }
-
+    private func formatNumber(number: Double) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 2
 
-        return formatter.string(from: NSNumber(value: total)) ?? "0.00"
-    }
-    
-    private func accountDisclosureGroupTitle(title: String, account: [FinancialAccount]) -> String {
-        return Text(title).font(.title3) +
-        Text(" $\(accountTotals(accounts: account))"
+        return formatter.string(from: NSNumber(value: number)) ?? "0.00"
     }
 }
 
-// MARK: - Card View
-
 struct CardView: View {
-    var cardTitle: Text
-    var balance: String
+    @Environment(\.colorScheme) var colorScheme
+    var cardTitle: String
     var isSelected: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            cardTitle
-                .foregroundColor(.white)
+            CardHeaderView(cardTitle: cardTitle)
             
-            if isSelected {
-                Text("Balance")
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.7))
-                
-                Text(balance)
-                    .font(.title2)
-                    .foregroundColor(.white)
-                    .fontWeight(.bold)
-            }
-            
-            Spacer()
+           Spacer()
         }
         .padding()
-        .frame(maxWidth: .infinity)
-        .frame(height: 200)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .topLeading, endPoint: .bottomTrailing)
+            LinearGradient(
+                gradient: Gradient(colors: colorScheme == .dark ? [Color.blue, Color.purple] : [Color.purple, Color.blue]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
         )
         .cornerRadius(15)
         .shadow(radius: isSelected ? 10 : 5)
-        .scaleEffect(isSelected ? 1.05 : 1.0) // Slightly enlarge the selected card
+        .scaleEffect(isSelected ? 1.05 : 1.0)
     }
 }
 
-// MARK: - Expanded Card View
+struct CardHeaderView: View {
+    var cardTitle: String
+    var body: some View {
+        Text(cardTitle)
+            .font(.title)
+            .fontWeight(.bold)
+            .foregroundColor(.white)
+    }
+}
 
 struct ExpandedCardView: View {
     var cardTitle: String
     var balance: String
+    var geometry: GeometryProxy
+    //let accounts: [FinancialAccount]
     var onClose: () -> Void
+    
 
     var body: some View {
         VStack {
             VStack(alignment: .leading, spacing: 10) {
-                Text(cardTitle)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
+                CardHeaderView(cardTitle: cardTitle)
                 
                 Text("Balance")
                     .font(.headline)
@@ -176,6 +156,34 @@ struct ExpandedCardView: View {
                     .font(.title)
                     .foregroundColor(.white)
                     .fontWeight(.bold)
+                
+                // Placeholder for "Recent Transactions"
+                Text("Recent Transactions")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.top)
+
+                ForEach(0..<3) { transaction in
+                    HStack {
+                        Rectangle()
+                            .fill(Color.white.opacity(0.3))
+                            .frame(width: geometry.size.width / 3, height: geometry.size.height / 15)
+                            .cornerRadius(10)
+                        Spacer()
+                    }
+                    .padding(.vertical, 5)
+                }
+
+                // Placeholder for "Spending Overview"
+                Text("Spending Overview")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.top)
+
+                Rectangle()
+                    .fill(Color.white.opacity(0.3))
+                    .frame(height: geometry.size.height / 4)
+                    .cornerRadius(15)
                 
                 Spacer()
             }
@@ -188,7 +196,6 @@ struct ExpandedCardView: View {
             .shadow(radius: 10)
             .padding()
         }
-        .background(Color(.systemGray6).edgesIgnoringSafeArea(.all)) // Background similar to Wallet app
         .onTapGesture {
             withAnimation(.spring()) {
                 onClose()
@@ -196,7 +203,7 @@ struct ExpandedCardView: View {
         }
         .gesture(
             DragGesture().onEnded { value in
-                if value.translation.height > 100 { // Detect downward swipe
+                if value.translation.height > 100 {
                     withAnimation(.spring()) {
                         onClose()
                     }
@@ -204,63 +211,4 @@ struct ExpandedCardView: View {
             }
         )
     }
-}
-
-// MARK: - Add Account Sheet
-
-struct AddAccountSheet: View {
-    @Environment(\.presentationMode) var presentationMode
-    @State private var name: String = ""
-    @State private var balance: String = ""
-    
-    var accountType: AccountType
-    var onAddAccount: (FinancialAccount) -> Void
-    
-    var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Account Details")) {
-                    TextField("Account Name", text: $name)
-                    
-                    TextField("Account Balance", text: $balance)
-                        .keyboardType(.decimalPad)
-                }
-            }
-            .navigationBarTitle("Add \(accountType.rawValue.capitalized)", displayMode: .inline)
-            .navigationBarItems(
-                leading: Button("Cancel") {
-                    presentationMode.wrappedValue.dismiss()
-                },
-                trailing: Button("Save") {
-                    if validateFields() {
-                        let formattedBalance = Double(balance) ?? 0
-                        let newAccount = FinancialAccount(name: name, balance: formattedBalance)
-                        onAddAccount(newAccount)
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                }
-                .disabled(!validateFields())
-            )
-        }
-    }
-    
-    // MARK: - Validation
-    
-    private func validateFields() -> Bool {
-        return !name.isEmpty && !balance.isEmpty && Double(balance) != nil
-    }
-}
-
-// MARK: - Supporting Models
-
-struct FinancialAccount: Identifiable {
-    var id = UUID()
-    var name: String
-    var balance: Double
-}
-
-enum AccountType: String, CaseIterable {
-    case creditCard = "Credit Card"
-    case checkingAccount = "Checking Account"
-    case savingsAccount = "Savings Account"
 }
