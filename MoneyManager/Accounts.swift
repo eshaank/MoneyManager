@@ -21,8 +21,15 @@ struct FinancialView: View{
 
     @State private var creditCards: [FinancialAccount] = [
         FinancialAccount(name: "Visa", balance: 2000),
-        FinancialAccount(name: "Wells Fargo Active Cash", balance: 2000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000)]
+        FinancialAccount(name: "Wells Fargo Active Cash extra long", balance: 2000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000)
+    ]
 
     @State private var checkingAccounts: [FinancialAccount] = [FinancialAccount(name: "Everything", balance: 2000)]
 
@@ -42,63 +49,6 @@ struct FinancialView: View{
     }
 }
 
-struct WalletView: View {
-    @State private var selectedCardIndex: Int? = nil
-    @State private var isCardExpanded: Bool = false
-    
-    let title: String
-    let accounts: [FinancialAccount]
-
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                if !isCardExpanded {
-                    ScrollView(.vertical, showsIndicators: false) {
-                        Text(title)
-                            .font(.largeTitle)
-                        VStack(spacing: -geometry.size.height / 6) { // Dynamic spacing based on screen height
-                            ForEach(accounts.indices, id: \.self) { index in
-                                let account = accounts[index]
-                                CardView(cardTitle: account.name, isSelected: selectedCardIndex == index)
-                                    .padding(.horizontal)
-                                    .frame(height: geometry.size.height / 4) // Dynamic card height
-                                    .zIndex(selectedCardIndex == index ? 1 : 0)
-                                    .onTapGesture {
-                                        withAnimation(.easeInOut(duration: 0.3)) {
-                                            selectedCardIndex = selectedCardIndex == index ? nil : index
-                                            isCardExpanded = selectedCardIndex != nil
-                                        }
-                                    }
-                            }
-                        }
-                        .padding(.top, geometry.size.height / 10) // Dynamic top padding
-                    }
-                } else if let index = selectedCardIndex {
-                    let selectedAccount = accounts[index]
-                    ExpandedCardView(cardTitle: selectedAccount.name,
-                                     balance: "$\(formatNumber(number: selectedAccount.balance))",
-                                     geometry: geometry) {
-                        withAnimation(.spring()) {
-                            isCardExpanded = false
-                            selectedCardIndex = nil
-                        }
-                    }
-                    .zIndex(2)
-                }
-            }
-        }
-    }
-
-    private func formatNumber(number: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-
-        return formatter.string(from: NSNumber(value: number)) ?? "0.00"
-    }
-}
-
 struct CardView: View {
     @Environment(\.colorScheme) var colorScheme
     var cardTitle: String
@@ -114,7 +64,7 @@ struct CardView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             LinearGradient(
-                gradient: Gradient(colors: colorScheme == .dark ? [Color.blue, Color.purple] : [Color.purple, Color.blue]),
+                gradient: Gradient(colors: colorScheme == .dark ? [Color.purple, Color.indigo, Color.blue] : [Color.purple, Color.indigo, Color.blue]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -126,12 +76,13 @@ struct CardView: View {
 }
 
 struct CardHeaderView: View {
+    @Environment(\.colorScheme) var colorScheme
     var cardTitle: String
     var body: some View {
         Text(cardTitle)
             .font(.title)
             .fontWeight(.bold)
-            .foregroundColor(.white)
+            .foregroundColor(colorScheme == .dark ? .black : .white)
     }
 }
 
@@ -210,5 +161,104 @@ struct ExpandedCardView: View {
                 }
             }
         )
+    }
+}
+
+struct WalletView: View {
+    @State private var selectedCardIndex: Int? = nil
+    @State private var isCardExpanded: Bool = false
+    @State private var scrollOffset: CGFloat = 0
+    @State private var startingState: Bool = true //This is used to ensure cards are starting at baseSpace 0 at start
+    
+    let title: String
+    let accounts: [FinancialAccount]
+
+    var body: some View {
+        GeometryReader { geometry in
+            VStack {
+                if !isCardExpanded {
+                    // Title at the top, outside of the ScrollView
+                    HStack {
+                        Text(title)
+                            .font(.largeTitle)
+                            .padding(.top, 20)
+                            .padding(.horizontal)
+                    }
+                }
+                
+                ZStack {
+                    if !isCardExpanded {
+                        ScrollView(.vertical, showsIndicators: false) {
+                            VStack {
+                                GeometryReader { innerGeometry in
+                                    VStack(spacing: calculateSpacing(innerGeometry)) {
+                                        ForEach(accounts.indices, id: \.self) { index in
+                                            let account = accounts[index]
+                                            CardView(cardTitle: account.name, isSelected: selectedCardIndex == index)
+                                                .padding(.horizontal)
+                                                .frame(height: geometry.size.height / 4) // Dynamic card height
+                                                .offset(y: calculateOffset(innerGeometry, index: index, cardHeight: geometry.size.height / 4, startState: startingState))
+                                                .zIndex(selectedCardIndex == index ? 1 : Double(accounts.count - index))
+                                                .onTapGesture {
+                                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                                        selectedCardIndex = selectedCardIndex == index ? nil : index
+                                                        isCardExpanded = selectedCardIndex != nil
+                                                    }
+                                                }
+                                            startingState = false
+                                        }
+                                    }
+                                    .onAppear {
+                                        scrollOffset = innerGeometry.frame(in: .global).minY
+                                    }
+                                    .onChange(of: innerGeometry.frame(in: .global).minY) { newOffset in
+                                        scrollOffset = newOffset
+                                    }
+                                }
+                                .frame(height: CGFloat(accounts.count) * (geometry.size.height / 4))
+                            }
+                        }
+                    } else if let index = selectedCardIndex {
+                        let selectedAccount = accounts[index]
+                        ExpandedCardView(cardTitle: selectedAccount.name,
+                                         balance: "$\(formatNumber(number: selectedAccount.balance))",
+                                         geometry: geometry) {
+                            withAnimation(.spring()) {
+                                isCardExpanded = false
+                                selectedCardIndex = nil
+                            }
+                        }
+                        .zIndex(2)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func calculateSpacing(_ geometry: GeometryProxy) -> CGFloat {
+        let baseSpacing: CGFloat = 0 // No initial negative spacing, start at 0
+        let additionalSpacing = max(0, scrollOffset / 10)
+        return baseSpacing + additionalSpacing
+    }
+    
+    private func calculateOffset(_ geometry: GeometryProxy, index: Int, cardHeight: CGFloat, startState: Bool) -> CGFloat {
+        let pullOffset = max(0, scrollOffset / 10)
+        
+        print(index)
+        if startState == true {
+            return 0
+        } else {
+            // Cards scroll up and stop at the position of the first card
+            return min(CGFloat(index) * cardHeight, pullOffset * CGFloat(index))
+        }
+    }
+
+    private func formatNumber(number: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+
+        return formatter.string(from: NSNumber(value: number)) ?? "0.00"
     }
 }
