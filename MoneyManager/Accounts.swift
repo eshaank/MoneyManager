@@ -8,6 +8,7 @@ struct Accounts: View {
                 Label("Accounts", systemImage: "hammer")
             }
             .navigationTitle("Accounts")
+            .tag(0)
     }
 }
 
@@ -21,18 +22,8 @@ struct FinancialView: View{
 
     @State private var creditCards: [FinancialAccount] = [
         FinancialAccount(name: "Visa", balance: 2000),
-        FinancialAccount(name: "Wells Fargo Active Cash extra long", balance: 2000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "End", balance: 50000)
+        FinancialAccount(name: "Wells Fargo Active Cash", balance: 2000),
+        FinancialAccount(name: "American Express", balance: 50000)
     ]
 
     @State private var checkingAccounts: [FinancialAccount] = [FinancialAccount(name: "Everything", balance: 2000)]
@@ -99,10 +90,25 @@ struct ExpandedCardView: View {
     
 
     var body: some View {
+        
         VStack {
             VStack(alignment: .leading, spacing: 10) {
-                CardHeaderView(cardTitle: cardTitle)
-                
+                HStack{
+                    CardHeaderView(cardTitle: cardTitle)
+                    Spacer()
+                    VStack{
+                        Button(action: {
+                            // This is a dummy button, so no action is needed
+                        }) {
+                            Text("delete")
+                                .foregroundColor(.white)
+                                .font(Font.callout)
+                                .bold()
+                                .padding(.top, 10)
+                        }
+                    }
+                }
+                    
                 Text("Balance")
                     .font(.headline)
                     .foregroundColor(.white.opacity(0.7))
@@ -151,11 +157,6 @@ struct ExpandedCardView: View {
             .shadow(radius: 10)
             .padding()
         }
-        .onTapGesture {
-            withAnimation(.spring()) {
-                onClose()
-            }
-        }
         .gesture(
             DragGesture().onEnded { value in
                 if value.translation.height > 100 {
@@ -165,6 +166,41 @@ struct ExpandedCardView: View {
                 }
             }
         )
+    }
+}
+
+struct WalletHeaderView: View{
+    let title: String
+    let accountTotal: String
+
+    var body: some View{
+        VStack(alignment: .leading) {
+            HStack {
+                Text(title)
+                    .font(.system(size: 36))
+                    .bold()
+                    .padding(.top, 40)  // Adjust padding here if needed
+                    .alignmentGuide(.firstTextBaseline) { d in d[.firstTextBaseline] }
+
+                Spacer()
+                
+                Button(action: {
+                    // This is a dummy button, so no action is needed
+                }) {
+                    Text("add")
+                        .foregroundColor(.blue)
+                        .font(Font.callout)
+                        .bold()
+                        .padding(.top, 30)  // Adjust padding here if needed
+                        .padding(.horizontal, 20)
+                }
+                .padding(.top) // Match padding with Text for alignment
+                
+            }
+            
+            Text("Total: $\(accountTotal)")
+                .bold()
+        }
     }
 }
 
@@ -180,15 +216,9 @@ struct WalletView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack {
-//                if !isCardExpanded {
-//                    // Title at the top, outside of the ScrollView
-//                    HStack {
-//                        Text(title)
-//                            .font(.largeTitle)
-//                            .padding(.top, 20)
-//                    }
-//                }
-                
+                if !isCardExpanded {
+                    WalletHeaderView(title: title, accountTotal: accountTotal(accounts: accounts))
+                }
                 ZStack {
                     if !isCardExpanded {
                         ScrollView(.vertical, showsIndicators: false) {
@@ -223,7 +253,7 @@ struct WalletView: View {
                                     }
                                 }
                                 .frame(height: CGFloat(accounts.count) * (geometry.size.height / 4) + CGFloat((accounts.count - 1) * -110))
-                                .padding(.top, 20) // Move cards lower by adding top padding
+                                .padding(.top, 10) // Move cards lower by adding top padding
                             }
                         }
                     } else if let index = selectedCardIndex {
@@ -268,5 +298,17 @@ struct WalletView: View {
         formatter.maximumFractionDigits = 2
 
         return formatter.string(from: NSNumber(value: number)) ?? "0.00"
+    }
+
+
+    private func accountTotal(accounts: [FinancialAccount]) -> String {
+        let total = accounts.reduce(0) { $0 + $1.balance }
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+
+        return formatter.string(from: NSNumber(value: total)) ?? "0.00"
     }
 }

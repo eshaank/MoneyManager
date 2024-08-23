@@ -18,9 +18,8 @@ struct SelectView: View {
     
     var body: some View {
         TabView(selection: $selectedIndex) {
-            
-            Dashboard() // Dashboard page
             Accounts() // Accounts page
+            Dashboard() // Dashboard page
             Investments() // Investments page
             Monthly() // Monthly page
             //Playground() // A place to play around with styling and looks and stuff
@@ -31,9 +30,9 @@ struct SelectView: View {
             //3
             UITabBarItem.appearance().badgeColor = .systemPink
             //4
-            UITabBar.appearance().backgroundColor = .systemGray4.withAlphaComponent(0.4)
+            //UITabBar.appearance().backgroundColor = .systemGray4.withAlphaComponent(0.4)
             //5
-            UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.gray]
+            //UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.gray]
             //UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
             //Above API will kind of override other behaviour and bring the default UI for TabView
         })

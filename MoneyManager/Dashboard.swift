@@ -24,7 +24,7 @@ struct DashboardTabViewPage: View{
         .tabItem {
             Label("Dashboard", systemImage: "gauge")
         }
-        .tag(0)
+        .tag(1)
     }
 }
 
