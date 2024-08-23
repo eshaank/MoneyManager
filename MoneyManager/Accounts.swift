@@ -28,7 +28,11 @@ struct FinancialView: View{
         FinancialAccount(name: "American Express Platinum", balance: 50000),
         FinancialAccount(name: "American Express Platinum", balance: 50000),
         FinancialAccount(name: "American Express Platinum", balance: 50000),
-        FinancialAccount(name: "American Express Platinum", balance: 50000)
+        FinancialAccount(name: "American Express Platinum", balance: 50000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000),
+        FinancialAccount(name: "American Express Platinum", balance: 50000),
+        FinancialAccount(name: "End", balance: 50000)
     ]
 
     @State private var checkingAccounts: [FinancialAccount] = [FinancialAccount(name: "Everything", balance: 2000)]
@@ -168,7 +172,7 @@ struct WalletView: View {
     @State private var selectedCardIndex: Int? = nil
     @State private var isCardExpanded: Bool = false
     @State private var scrollOffset: CGFloat = 0
-    @State private var startingState: Bool = true //This is used to ensure cards are starting at baseSpace 0 at start
+    @State private var initialTopCardPosition: CGFloat? = nil
     
     let title: String
     let accounts: [FinancialAccount]
@@ -176,15 +180,14 @@ struct WalletView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack {
-                if !isCardExpanded {
-                    // Title at the top, outside of the ScrollView
-                    HStack {
-                        Text(title)
-                            .font(.largeTitle)
-                            .padding(.top, 20)
-                            .padding(.horizontal)
-                    }
-                }
+//                if !isCardExpanded {
+//                    // Title at the top, outside of the ScrollView
+//                    HStack {
+//                        Text(title)
+//                            .font(.largeTitle)
+//                            .padding(.top, 20)
+//                    }
+//                }
                 
                 ZStack {
                     if !isCardExpanded {
@@ -197,15 +200,19 @@ struct WalletView: View {
                                             CardView(cardTitle: account.name, isSelected: selectedCardIndex == index)
                                                 .padding(.horizontal)
                                                 .frame(height: geometry.size.height / 4) // Dynamic card height
-                                                .offset(y: calculateOffset(innerGeometry, index: index, cardHeight: geometry.size.height / 4, startState: startingState))
-                                                .zIndex(selectedCardIndex == index ? 1 : Double(accounts.count - index))
+                                                .offset(y: calculateOffset(innerGeometry, index: index, scrollViewHeight: geometry.size.height))
+                                                .zIndex(selectedCardIndex == index ? 1 : 0)
                                                 .onTapGesture {
                                                     withAnimation(.easeInOut(duration: 0.3)) {
                                                         selectedCardIndex = selectedCardIndex == index ? nil : index
                                                         isCardExpanded = selectedCardIndex != nil
                                                     }
                                                 }
-                                            startingState = false
+                                                .onAppear {
+                                                    if index == 0 {
+                                                        initialTopCardPosition = innerGeometry.frame(in: .global).minY
+                                                    }
+                                                }
                                         }
                                     }
                                     .onAppear {
@@ -215,7 +222,8 @@ struct WalletView: View {
                                         scrollOffset = newOffset
                                     }
                                 }
-                                .frame(height: CGFloat(accounts.count) * (geometry.size.height / 4))
+                                .frame(height: CGFloat(accounts.count) * (geometry.size.height / 4) + CGFloat((accounts.count - 1) * -110))
+                                .padding(.top, 20) // Move cards lower by adding top padding
                             }
                         }
                     } else if let index = selectedCardIndex {
@@ -236,21 +244,21 @@ struct WalletView: View {
     }
     
     private func calculateSpacing(_ geometry: GeometryProxy) -> CGFloat {
-        let baseSpacing: CGFloat = 0 // No initial negative spacing, start at 0
+        let baseSpacing: CGFloat = -150
         let additionalSpacing = max(0, scrollOffset / 10)
         return baseSpacing + additionalSpacing
     }
     
-    private func calculateOffset(_ geometry: GeometryProxy, index: Int, cardHeight: CGFloat, startState: Bool) -> CGFloat {
-        let pullOffset = max(0, scrollOffset / 10)
-        
-        print(index)
-        if startState == true {
+    private func calculateOffset(_ geometry: GeometryProxy, index: Int, scrollViewHeight: CGFloat) -> CGFloat {
+        guard let initialTopCardPosition = initialTopCardPosition else {
             return 0
-        } else {
-            // Cards scroll up and stop at the position of the first card
-            return min(CGFloat(index) * cardHeight, pullOffset * CGFloat(index))
         }
+        
+        let currentOffset = geometry.frame(in: .global).minY - initialTopCardPosition
+        let adjustedOffset = max(currentOffset, 0)
+        
+        let pullOffset = max(0, scrollOffset / 10)
+        return pullOffset * CGFloat(index) + adjustedOffset
     }
 
     private func formatNumber(number: Double) -> String {
