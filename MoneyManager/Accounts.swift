@@ -3,7 +3,7 @@ import SwiftUI
 struct Accounts: View {
     @Environment(\.colorScheme) var colorScheme
     var body: some View {
-        FinancialView()
+        AccountsPageView()
             .tabItem {
                 Label("Accounts", systemImage: "hammer")
             }
@@ -12,35 +12,37 @@ struct Accounts: View {
     }
 }
 
-struct FinancialView: View {
+struct AccountsPageView: View {
     @State private var creditCards: [FinancialAccount] = [
-        FinancialAccount(name: "Visa", balance: 2000),
-        FinancialAccount(name: "Wells Fargo Active Cash", balance: 2000),
-        FinancialAccount(name: "American Express", balance: 50000)
+        FinancialAccount(name: "Apple Card", balance: 1024.45),
+        FinancialAccount(name: "Wells Fargo Active Cash", balance: 1342453),
+        FinancialAccount(name: "American Express", balance: 500)
     ]
-
     @State private var checkingAccounts: [FinancialAccount] = [FinancialAccount(name: "Everything", balance: 2000)]
-
     @State private var savingsAccounts: [FinancialAccount] = [FinancialAccount(name: "Nothing", balance: 2000)]
+    
+    @State private var showAccountTotals: Bool = true
     
     var body: some View {
         TabView {
-            WalletView(accounts: $creditCards, title: "Credit Cards")
-            WalletView(accounts: $savingsAccounts, title: "Savings")
-            WalletView(accounts: $checkingAccounts, title: "Checkings")
+            WalletView(accounts: $creditCards, showAccountTotals: $showAccountTotals, title: "Credit Cards")
+            WalletView(accounts: $savingsAccounts, showAccountTotals: $showAccountTotals, title: "Savings")
+            WalletView(accounts: $checkingAccounts, showAccountTotals: $showAccountTotals, title: "Checkings")
         }
-        .tabViewStyle(PageTabViewStyle())
+        .tabViewStyle(.page(indexDisplayMode: .never))
     }
 }
 
 struct CardView: View {
     @Environment(\.colorScheme) var colorScheme
     var cardTitle: String
+    var balance: Double
     var isSelected: Bool
+    @Binding var showAccountTotals: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            CardHeaderView(cardTitle: cardTitle)
+            CardHeaderView(cardTitle: cardTitle, balance: balance, isSelected: false, showAccountTotals: $showAccountTotals)
             
            Spacer()
         }
@@ -62,18 +64,41 @@ struct CardView: View {
 struct CardHeaderView: View {
     @Environment(\.colorScheme) var colorScheme
     var cardTitle: String
+    var balance: Double
+    var isSelected: Bool
+    @Binding var showAccountTotals: Bool
+
+    
     var body: some View {
-        Text(cardTitle)
-            .font(.title)
-            .fontWeight(.bold)
-            .foregroundColor(colorScheme == .dark ? .black : .white)
+        HStack(alignment: .firstTextBaseline,spacing: 20){
+            Text(cardTitle)
+                .font(.system(size: 26))
+                .fontWeight(.bold)
+                .foregroundColor(colorScheme == .dark ? .black : .white)
+            
+            Spacer()
+            
+            if !isSelected && showAccountTotals{
+                Text("$\(balance, specifier: "%.2f")")
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .foregroundColor(colorScheme == .dark ? .black : .white)
+                    .padding(.bottom)
+            }
+            else{
+                Text("")
+            }
+            
+        }
+        
     }
 }
 
 struct ExpandedCardView: View {
     var cardTitle: String
-    var balance: String
+    var balance: Double
     var geometry: GeometryProxy
+    @Binding var showAccountTotals: Bool
     //let accounts: [FinancialAccount]
     var onClose: () -> Void
     
@@ -83,17 +108,16 @@ struct ExpandedCardView: View {
         VStack {
             VStack(alignment: .leading, spacing: 10) {
                 HStack{
-                    CardHeaderView(cardTitle: cardTitle)
+                    CardHeaderView(cardTitle: cardTitle, balance: balance, isSelected: true, showAccountTotals: $showAccountTotals)
                     Spacer()
                     VStack{
                         Button(action: {
-                            // This is a dummy button, so no action is needed
+                            onClose()
                         }) {
-                            Text("delete")
+                            Text("close")
                                 .foregroundColor(.white)
                                 .font(Font.callout)
                                 .bold()
-                                .padding(.top, 10)
                         }
                     }
                 }
@@ -102,7 +126,7 @@ struct ExpandedCardView: View {
                     .font(.headline)
                     .foregroundColor(.white.opacity(0.7))
                 
-                Text(balance)
+                Text("$\(balance, specifier: "%.2f")")
                     .font(.title)
                     .foregroundColor(.white)
                     .fontWeight(.bold)
@@ -162,8 +186,8 @@ struct WalletHeaderView: View{
     let title: String
     let accountTotal: String
     @Binding var showAddAccount: Bool
-
-
+    @Binding var showAccountTotals: Bool
+    
     var body: some View{
         VStack(alignment: .leading) {
             HStack {
@@ -172,7 +196,16 @@ struct WalletHeaderView: View{
                     .bold()
                     .padding(.top, 40)  // Adjust padding here if needed
                     .alignmentGuide(.firstTextBaseline) { d in d[.firstTextBaseline] }
-
+                Button(action: {
+                    showAccountTotals.toggle() // Toggles between showing and hiding the total
+                }) {
+                    Image(systemName: showAccountTotals ? "eye" : "eye.slash")
+                        .font(.system(size: 16))
+                        .foregroundColor(.blue)
+                        .padding(.top, 45)
+                        
+                }
+                
                 Spacer()
                 
                 Button(action: {
@@ -189,7 +222,7 @@ struct WalletHeaderView: View{
                 
             }
             
-            Text("Total: $\(accountTotal)")
+            Text(showAccountTotals ? "Total: $\(accountTotal)" : "")
                 .bold()
         }
     }
@@ -197,6 +230,7 @@ struct WalletHeaderView: View{
 
 struct WalletView: View {
     @Binding var accounts: [FinancialAccount]
+    @Binding var showAccountTotals: Bool
     @State private var selectedCardIndex: Int? = nil
     @State private var isCardExpanded: Bool = false
     @State private var scrollOffset: CGFloat = 0
@@ -211,7 +245,8 @@ struct WalletView: View {
                 if !isCardExpanded {
                     WalletHeaderView(title: title, 
                                      accountTotal: accountTotal(accounts: accounts), 
-                                     showAddAccount: $showAddAccount)
+                                     showAddAccount: $showAddAccount,
+                                     showAccountTotals: $showAccountTotals)
                 }
                 ZStack {
                     if !isCardExpanded {
@@ -221,7 +256,10 @@ struct WalletView: View {
                                     VStack(spacing: calculateSpacing(innerGeometry)) {
                                         ForEach(accounts.indices, id: \.self) { index in
                                             let account = accounts[index]
-                                            CardView(cardTitle: account.name, isSelected: selectedCardIndex == index)
+                                            CardView(cardTitle: account.name,
+                                                     balance: account.balance,
+                                                     isSelected: selectedCardIndex == index,
+                                                     showAccountTotals: $showAccountTotals)
                                                 .padding(.horizontal)
                                                 .frame(height: geometry.size.height / 4) // Dynamic card height
                                                 .offset(y: calculateOffset(innerGeometry, index: index, scrollViewHeight: geometry.size.height))
@@ -253,8 +291,9 @@ struct WalletView: View {
                     } else if let index = selectedCardIndex {
                         let selectedAccount = accounts[index]
                         ExpandedCardView(cardTitle: selectedAccount.name,
-                                         balance: "$\(formatNumber(number: selectedAccount.balance))",
-                                         geometry: geometry) {
+                                         balance: selectedAccount.balance,
+                                         geometry: geometry,
+                                         showAccountTotals: $showAccountTotals) {
                             withAnimation(.spring()) {
                                 isCardExpanded = false
                                 selectedCardIndex = nil
@@ -294,16 +333,6 @@ struct WalletView: View {
         let pullOffset = max(0, scrollOffset / 10)
         return pullOffset * CGFloat(index) + adjustedOffset
     }
-
-    private func formatNumber(number: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-
-        return formatter.string(from: NSNumber(value: number)) ?? "0.00"
-    }
-
 
     private func accountTotal(accounts: [FinancialAccount]) -> String {
         let total = accounts.reduce(0) { $0 + $1.balance }

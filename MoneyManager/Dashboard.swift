@@ -22,7 +22,7 @@ struct DashboardTabViewPage: View{
                 .navigationTitle("Dashboard")
         }
         .tabItem {
-            Label("Dashboard", systemImage: "gauge")
+            Label("--", systemImage: "construction")
         }
         .tag(1)
     }
