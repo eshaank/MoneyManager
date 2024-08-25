@@ -12,14 +12,7 @@ struct Accounts: View {
     }
 }
 
-struct FinancialView: View{
-    @State private var isCreditCardsExpanded: Bool = true
-    @State private var isCheckingExpanded: Bool = true
-    @State private var isSavingsExpanded: Bool = true
-
-    @State private var showAddAccountSheet: Bool = false
-    @State private var selectedAccountType: AccountType = .creditCard
-
+struct FinancialView: View {
     @State private var creditCards: [FinancialAccount] = [
         FinancialAccount(name: "Visa", balance: 2000),
         FinancialAccount(name: "Wells Fargo Active Cash", balance: 2000),
@@ -30,17 +23,13 @@ struct FinancialView: View{
 
     @State private var savingsAccounts: [FinancialAccount] = [FinancialAccount(name: "Nothing", balance: 2000)]
     
-    var body: some View{
+    var body: some View {
         TabView {
-            WalletView(title: "Credit Cards",
-                       accounts: creditCards)
-            WalletView(title: "Savings",
-                       accounts: savingsAccounts)
-            WalletView(title: "Checkings",
-                       accounts: checkingAccounts)
+            WalletView(accounts: $creditCards, title: "Credit Cards")
+            WalletView(accounts: $savingsAccounts, title: "Savings")
+            WalletView(accounts: $checkingAccounts, title: "Checkings")
         }
         .tabViewStyle(PageTabViewStyle())
-
     }
 }
 
@@ -172,6 +161,8 @@ struct ExpandedCardView: View {
 struct WalletHeaderView: View{
     let title: String
     let accountTotal: String
+    @Binding var showAddAccount: Bool
+
 
     var body: some View{
         VStack(alignment: .leading) {
@@ -185,16 +176,16 @@ struct WalletHeaderView: View{
                 Spacer()
                 
                 Button(action: {
-                    // This is a dummy button, so no action is needed
+                    showAddAccount = true
                 }) {
                     Text("add")
                         .foregroundColor(.blue)
                         .font(Font.callout)
                         .bold()
-                        .padding(.top, 30)  // Adjust padding here if needed
+                        .padding(.top, 30)
                         .padding(.horizontal, 20)
                 }
-                .padding(.top) // Match padding with Text for alignment
+                .padding(.top)
                 
             }
             
@@ -205,19 +196,22 @@ struct WalletHeaderView: View{
 }
 
 struct WalletView: View {
+    @Binding var accounts: [FinancialAccount]
     @State private var selectedCardIndex: Int? = nil
     @State private var isCardExpanded: Bool = false
     @State private var scrollOffset: CGFloat = 0
     @State private var initialTopCardPosition: CGFloat? = nil
-    
+    @State private var showAddAccount: Bool = false
+
     let title: String
-    let accounts: [FinancialAccount]
 
     var body: some View {
         GeometryReader { geometry in
             VStack {
                 if !isCardExpanded {
-                    WalletHeaderView(title: title, accountTotal: accountTotal(accounts: accounts))
+                    WalletHeaderView(title: title, 
+                                     accountTotal: accountTotal(accounts: accounts), 
+                                     showAddAccount: $showAddAccount)
                 }
                 ZStack {
                     if !isCardExpanded {
@@ -269,7 +263,17 @@ struct WalletView: View {
                         .zIndex(2)
                     }
                 }
+                 if showAddAccount {
+                    AddAccountView(accounts: $accounts, isSelected: $showAddAccount)
+                        .padding()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.black)
+                        .cornerRadius(15)
+                        .shadow(radius: 10)
+                        .padding()
+                }
             }
+            .animation(.spring(), value: showAddAccount)
         }
     }
     
@@ -310,5 +314,44 @@ struct WalletView: View {
         formatter.maximumFractionDigits = 2
 
         return formatter.string(from: NSNumber(value: total)) ?? "0.00"
+    }
+}
+
+struct AddAccountView: View {
+    @Binding var accounts: [FinancialAccount]
+    @Environment(\.colorScheme) var colorScheme
+    @Binding var isSelected: Bool
+    @State private var accountName: String = ""
+    @State private var accountBalance: String = ""
+
+    var body: some View {
+        VStack {
+            TextField("Account Name", text: $accountName)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            
+            TextField("Balance", text: $accountBalance)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .keyboardType(.decimalPad)
+            HStack {
+                Button("Cancel") {
+                    // Dismiss the view
+                    isSelected = false
+                }
+                .foregroundColor(.red)
+                
+                Spacer()
+                
+                Button("Save") {
+                    if let balance = Double(accountBalance) {
+                        let newAccount = FinancialAccount(name: accountName, balance: balance)
+                        accounts.append(newAccount)
+                        // Dismiss the view
+                        isSelected = false
+                    }
+                }
+                .disabled(accountName.isEmpty || accountBalance.isEmpty)
+            }
+            .padding(20)
+        }
     }
 }
