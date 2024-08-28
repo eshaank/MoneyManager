@@ -72,7 +72,7 @@ struct CardHeaderView: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline,spacing: 20){
             Text(cardTitle)
-                .font(.system(size: 26))
+                .font(.system(size: 28))
                 .fontWeight(.bold)
                 .foregroundColor(colorScheme == .dark ? .black : .white)
             
@@ -80,13 +80,10 @@ struct CardHeaderView: View {
             
             if !isSelected && showAccountTotals{
                 Text("$\(balance, specifier: "%.2f")")
-                    .font(.caption)
+                    .font(.callout)
                     .fontWeight(.bold)
                     .foregroundColor(colorScheme == .dark ? .black : .white)
                     .padding(.bottom)
-            }
-            else{
-                Text("")
             }
             
         }
@@ -121,37 +118,41 @@ struct ExpandedCardView: View {
                         }
                     }
                 }
-                    
                 Text("Balance")
-                    .font(.headline)
-                    .foregroundColor(.white.opacity(0.7))
+                    .font(.title2)
+                    .bold()
+                    .foregroundColor(.white)
                 
                 Text("$\(balance, specifier: "%.2f")")
                     .font(.title)
                     .foregroundColor(.white)
-                    .fontWeight(.bold)
                 
                 // Placeholder for "Recent Transactions"
                 Text("Recent Transactions")
-                    .font(.headline)
+                    .font(.title2)
                     .foregroundColor(.white)
                     .padding(.top)
+                    .bold()
 
-                ForEach(0..<3) { transaction in
-                    HStack {
-                        Rectangle()
-                            .fill(Color.white.opacity(0.3))
-                            .frame(width: geometry.size.width / 3, height: geometry.size.height / 15)
-                            .cornerRadius(10)
-                        Spacer()
+                ScrollView(.vertical, showsIndicators: true){
+                    ForEach(0..<10) { transaction in
+                        HStack {
+                            Rectangle()
+                                .fill(Color.black.opacity(0.3))
+                                .frame(width: geometry.size.width / 1.5, height: geometry.size.height / 15)
+                                .cornerRadius(10)
+                            Spacer()
+                        }
+                        //.padding(.vertical, 5)
                     }
-                    .padding(.vertical, 5)
                 }
+                
 
                 // Placeholder for "Spending Overview"
                 Text("Spending Overview")
-                    .font(.headline)
+                    .font(.title2)
                     .foregroundColor(.white)
+                    .bold()
                     .padding(.top)
 
                 Rectangle()
@@ -183,6 +184,7 @@ struct ExpandedCardView: View {
 }
 
 struct WalletHeaderView: View{
+    @Environment(\.colorScheme) var colorScheme
     let title: String
     let accountTotal: String
     @Binding var showAddAccount: Bool
@@ -202,7 +204,7 @@ struct WalletHeaderView: View{
                     Image(systemName: showAccountTotals ? "eye" : "eye.slash")
                         .font(.system(size: 16))
                         .foregroundColor(.blue)
-                        .padding(.top, 45)
+                        .padding(.top, 50)
                         
                 }
                 
@@ -211,9 +213,9 @@ struct WalletHeaderView: View{
                 Button(action: {
                     showAddAccount = true
                 }) {
-                    Text("add")
-                        .foregroundColor(.blue)
-                        .font(Font.callout)
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundColor(colorScheme == .dark ? .white : .black)
+                        .font(.system(size: 25))
                         .bold()
                         .padding(.top, 30)
                         .padding(.horizontal, 20)
@@ -221,9 +223,10 @@ struct WalletHeaderView: View{
                 .padding(.top)
                 
             }
-            
+            .padding(.leading, 4)
             Text(showAccountTotals ? "Total: $\(accountTotal)" : "")
                 .bold()
+                .padding(.horizontal, 4)
         }
     }
 }
@@ -304,12 +307,12 @@ struct WalletView: View {
                 }
                  if showAddAccount {
                     AddAccountView(accounts: $accounts, isSelected: $showAddAccount)
-                        .padding()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.black)
-                        .cornerRadius(15)
-                        .shadow(radius: 10)
-                        .padding()
+                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                         .background(
+                             LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                         )
+                         .cornerRadius(15)
+                         .shadow(radius: 10)
                 }
             }
             .animation(.spring(), value: showAddAccount)
@@ -356,17 +359,27 @@ struct AddAccountView: View {
     var body: some View {
         VStack {
             TextField("Account Name", text: $accountName)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+                .cornerRadius(10)
+                .shadow(color: .gray.opacity(0.4), radius: 5, x: 0, y: 5)
+                .padding(.horizontal)
+
             TextField("Balance", text: $accountBalance)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+                .cornerRadius(10)
+                .shadow(color: .gray.opacity(0.4), radius: 5, x: 0, y: 5)
                 .keyboardType(.decimalPad)
+                .padding(.horizontal)
+
             HStack {
                 Button("Cancel") {
                     // Dismiss the view
                     isSelected = false
                 }
                 .foregroundColor(.red)
+                .bold()
                 
                 Spacer()
                 
@@ -379,6 +392,7 @@ struct AddAccountView: View {
                     }
                 }
                 .disabled(accountName.isEmpty || accountBalance.isEmpty)
+                .bold()
             }
             .padding(20)
         }

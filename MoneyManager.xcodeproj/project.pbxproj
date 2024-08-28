@@ -19,6 +19,7 @@
 		ACA2D1872C71863600447336 /* Investments.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1862C71863600447336 /* Investments.swift */; };
 		ACA2D1892C71866D00447336 /* Monthly.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1882C71866D00447336 /* Monthly.swift */; };
 		ACA2D18B2C7295AC00447336 /* Playground.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D18A2C7295AC00447336 /* Playground.swift */; };
+		ACEB56712C7BBA63001AAEF4 /* AccountInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEB56702C7BBA63001AAEF4 /* AccountInformation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		ACA2D1862C71863600447336 /* Investments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Investments.swift; sourceTree = "<group>"; };
 		ACA2D1882C71866D00447336 /* Monthly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monthly.swift; sourceTree = "<group>"; };
 		ACA2D18A2C7295AC00447336 /* Playground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playground.swift; sourceTree = "<group>"; };
+		ACEB56702C7BBA63001AAEF4 /* AccountInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInformation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				ACA2D1562C7170E900447336 /* MoneyManagerApp.swift */,
 				ACA2D1882C71866D00447336 /* Monthly.swift */,
 				ACA2D1582C7170E900447336 /* ContentView.swift */,
+				ACEB56702C7BBA63001AAEF4 /* AccountInformation.swift */,
 				ACA2D15A2C7170EA00447336 /* Assets.xcassets */,
 				ACA2D15C2C7170EA00447336 /* Preview Content */,
 				ACA2D1822C71844100447336 /* Dashboard.swift */,
@@ -278,6 +281,7 @@
 				ACA2D1892C71866D00447336 /* Monthly.swift in Sources */,
 				ACA2D18B2C7295AC00447336 /* Playground.swift in Sources */,
 				ACA2D1572C7170E900447336 /* MoneyManagerApp.swift in Sources */,
+				ACEB56712C7BBA63001AAEF4 /* AccountInformation.swift in Sources */,
 				ACA2D1872C71863600447336 /* Investments.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,6 +441,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MoneyManager/Preview Content\"";
+				DEVELOPMENT_TEAM = 3VJR7U6TJ9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -465,6 +470,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MoneyManager/Preview Content\"";
+				DEVELOPMENT_TEAM = 3VJR7U6TJ9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
