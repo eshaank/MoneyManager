@@ -16,9 +16,6 @@
 		AC8ED46F2C857F8A00F19B3A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED46E2C857F8A00F19B3A /* SceneDelegate.swift */; };
 		ACA2D1572C7170E900447336 /* MoneyManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1562C7170E900447336 /* MoneyManagerApp.swift */; };
 		ACA2D1592C7170E900447336 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1582C7170E900447336 /* ContentView.swift */; };
-		ACA2D1682C7170EA00447336 /* MoneyManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1672C7170EA00447336 /* MoneyManagerTests.swift */; };
-		ACA2D1722C7170EA00447336 /* MoneyManagerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1712C7170EA00447336 /* MoneyManagerUITests.swift */; };
-		ACA2D1742C7170EA00447336 /* MoneyManagerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1732C7170EA00447336 /* MoneyManagerUITestsLaunchTests.swift */; };
 		ACA2D1832C71844100447336 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1822C71844100447336 /* Dashboard.swift */; };
 		ACA2D1852C71845000447336 /* Accounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1842C71845000447336 /* Accounts.swift */; };
 		ACA2D1872C71863600447336 /* Investments.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1862C71863600447336 /* Investments.swift */; };
@@ -55,10 +52,7 @@
 		ACA2D1562C7170E900447336 /* MoneyManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManagerApp.swift; sourceTree = "<group>"; };
 		ACA2D1582C7170E900447336 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		ACA2D1632C7170EA00447336 /* MoneyManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoneyManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		ACA2D1672C7170EA00447336 /* MoneyManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManagerTests.swift; sourceTree = "<group>"; };
 		ACA2D16D2C7170EA00447336 /* MoneyManagerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoneyManagerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		ACA2D1712C7170EA00447336 /* MoneyManagerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManagerUITests.swift; sourceTree = "<group>"; };
-		ACA2D1732C7170EA00447336 /* MoneyManagerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManagerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		ACA2D1822C71844100447336 /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
 		ACA2D1842C71845000447336 /* Accounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accounts.swift; sourceTree = "<group>"; };
 		ACA2D1862C71863600447336 /* Investments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Investments.swift; sourceTree = "<group>"; };
@@ -130,8 +124,6 @@
 			isa = PBXGroup;
 			children = (
 				ACA2D1552C7170E900447336 /* MoneyManager */,
-				ACA2D1662C7170EA00447336 /* MoneyManagerTests */,
-				ACA2D1702C7170EA00447336 /* MoneyManagerUITests */,
 				ACA2D1542C7170E900447336 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -156,23 +148,6 @@
 				ACA2D1562C7170E900447336 /* MoneyManagerApp.swift */,
 			);
 			path = MoneyManager;
-			sourceTree = "<group>";
-		};
-		ACA2D1662C7170EA00447336 /* MoneyManagerTests */ = {
-			isa = PBXGroup;
-			children = (
-				ACA2D1672C7170EA00447336 /* MoneyManagerTests.swift */,
-			);
-			path = MoneyManagerTests;
-			sourceTree = "<group>";
-		};
-		ACA2D1702C7170EA00447336 /* MoneyManagerUITests */ = {
-			isa = PBXGroup;
-			children = (
-				ACA2D1712C7170EA00447336 /* MoneyManagerUITests.swift */,
-				ACA2D1732C7170EA00447336 /* MoneyManagerUITestsLaunchTests.swift */,
-			);
-			path = MoneyManagerUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -330,7 +305,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACA2D1682C7170EA00447336 /* MoneyManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,8 +312,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACA2D1722C7170EA00447336 /* MoneyManagerUITests.swift in Sources */,
-				ACA2D1742C7170EA00447336 /* MoneyManagerUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
