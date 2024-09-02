@@ -93,6 +93,13 @@ class ServerCommunicator {
                     print("Received data from: \(path)")
                     data.printJson()
 
+                    // Check if the response might be HTML
+                    if let responseString = String(data: data, encoding: .utf8),
+                       responseString.lowercased().contains("<!doctype html>") {
+                        completion(.failure(.decodingError("Server returned HTML instead of JSON. There might be a server-side error.")))
+                        return
+                    }
+
                     do {
                         let object = try JSONDecoder().decode(T.self, from: data)
                         completion(.success(object))

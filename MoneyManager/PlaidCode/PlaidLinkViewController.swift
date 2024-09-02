@@ -86,7 +86,13 @@ class PlaidLinkViewController: UIViewController {
                 self.dismissViewController(success: true, accounts: accounts)
             case .failure(let error):
                 print("Error fetching account info: \(error)")
-                let errorMessage = "Unable to fetch account information. Please try again later."
+                let errorMessage: String
+                switch error {
+                case .decodingError(let message):
+                    errorMessage = "Server returned invalid data. Please try again later. Error: \(message)"
+                default:
+                    errorMessage = "Unable to fetch account information. Please try again later."
+                }
                 self.dismissViewController(success: false, accounts: nil, errorMessage: errorMessage)
             }
         }
