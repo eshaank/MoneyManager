@@ -32,7 +32,10 @@ struct AccountsPageView: View {
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .sheet(isPresented: $showPlaidLink) {
-            PlaidLinkView()
+            PlaidLinkView(accounts: $creditCards) { success, errorMessage in
+                showPlaidLink = false
+                // Handle success or error here if needed
+            }
         }
     }
 }
@@ -358,6 +361,48 @@ struct AddAccountView: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var isSelected: Bool
     @State private var showPlaidLink: Bool = false
+    @State private var connectionStatus: ConnectionStatus = .notConnected
+    @State private var errorMessage: String?
+
+    enum ConnectionStatus {
+        case notConnected, connected, failed
+    }
+
+    var body: some View {
+        VStack(spacing: 30) {
+            if connectionStatus == .connected {
+                SuccessView {
+                    isSelected = false
+                }
+            } else if connectionStatus == .failed {
+                FailureView(errorMessage: errorMessage ?? "An unknown error occurred") {
+                    connectionStatus = .notConnected
+                    errorMessage = nil
+                }
+            } else {
+                ConnectView(connectionStatus: $connectionStatus, isSelected: $isSelected, showPlaidLink: $showPlaidLink)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(
+            Color(UIColor.systemBackground)
+                .edgesIgnoringSafeArea(.all)
+        )
+        .sheet(isPresented: $showPlaidLink) {
+            PlaidLinkView(accounts: $accounts) { success, error in
+                showPlaidLink = false
+                connectionStatus = success ? .connected : .failed
+                errorMessage = error
+            }
+        }
+    }
+}
+
+struct ConnectView: View {
+    @Binding var connectionStatus: AddAccountView.ConnectionStatus
+    @Binding var isSelected: Bool
+    @Binding var showPlaidLink: Bool
 
     var body: some View {
         VStack(spacing: 30) {
@@ -373,18 +418,14 @@ struct AddAccountView: View {
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
             
-            Text("Securely link your bank accounts using Plaid to get started with managing your finances.")
+            Text("Securely link your bank using Plaid")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             
             Button(action: {
-                let viewController = PlaidLinkViewController()
-                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                   let window = windowScene.windows.first {
-                    window.rootViewController?.present(viewController, animated: true, completion: nil)
-                }
+                showPlaidLink = true
             }) {
                 HStack {
                     Image(systemName: "lock.fill")
@@ -405,14 +446,80 @@ struct AddAccountView: View {
             .foregroundColor(.red)
             .padding(.top)
         }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(
-            Color(UIColor.systemBackground)
-                .edgesIgnoringSafeArea(.all)
-        )
-        .sheet(isPresented: $showPlaidLink) {
-            PlaidLinkView()
+    }
+}
+
+struct SuccessView: View {
+    var onDismiss: () -> Void
+    @State private var animationAmount: CGFloat = 0.5
+
+    var body: some View {
+        VStack(spacing: 30) {
+            Image(systemName: "checkmark.circle.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100)
+                .foregroundColor(.green)
+                .shadow(color: .green.opacity(0.3), radius: 10, x: 0, y: 5)
+                .scaleEffect(animationAmount)
+                .rotationEffect(.degrees(animationAmount == 1 ? 0 : -10))
+                .animation(.spring(response: 0.5, dampingFraction: 0.6, blendDuration: 0).delay(0.1), value: animationAmount)
+                .onAppear {
+                    animationAmount = 1
+                }
+            
+            Text("Account Connected Successfully!")
+                .font(.title2)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+            
+            Button("Done") {
+                onDismiss()
+            }
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(15)
+            .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
+            .padding(.horizontal)
+        }
+    }
+}
+
+struct FailureView: View {
+    let errorMessage: String
+    let onDismiss: () -> Void
+
+    var body: some View {
+        VStack(spacing: 30) {
+            Image(systemName: "xmark.circle.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100)
+                .foregroundColor(.red)
+                .shadow(color: .red.opacity(0.3), radius: 10, x: 0, y: 5)
+
+            Text("Connection Failed")
+                .font(.title2)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+
+            Text(errorMessage)
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+
+            Button("Try Again") {
+                onDismiss()
+            }
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(15)
+            .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
+            .padding(.horizontal)
         }
     }
 }

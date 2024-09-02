@@ -32,3 +32,16 @@ struct SimpleAuthResponse: Codable{
     let routingNumber: String
 }
  
+struct AccountsGetResponse: Codable {
+    let accounts: [PlaidAccount]
+}
+
+struct PlaidAccount: Codable {
+    let name: String
+    let balances: AccountBalances
+}
+
+struct AccountBalances: Codable {
+    let current: Double
+}
+
