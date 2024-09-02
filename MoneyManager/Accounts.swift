@@ -22,6 +22,7 @@ struct AccountsPageView: View {
     @State private var savingsAccounts: [FinancialAccount] = [FinancialAccount(name: "Nothing", balance: 2000)]
     
     @State private var showAccountTotals: Bool = true
+    @State private var showPlaidLink: Bool = false
     
     var body: some View {
         TabView {
@@ -30,6 +31,9 @@ struct AccountsPageView: View {
             WalletView(accounts: $checkingAccounts, showAccountTotals: $showAccountTotals, title: "Checkings")
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
+        .sheet(isPresented: $showPlaidLink) {
+            PlaidLinkView()
+        }
     }
 }
 
@@ -353,48 +357,62 @@ struct AddAccountView: View {
     @Binding var accounts: [FinancialAccount]
     @Environment(\.colorScheme) var colorScheme
     @Binding var isSelected: Bool
-    @State private var accountName: String = ""
-    @State private var accountBalance: String = ""
+    @State private var showPlaidLink: Bool = false
 
     var body: some View {
-        VStack {
-            TextField("Account Name", text: $accountName)
-                .padding()
-                .background(Color(UIColor.secondarySystemBackground))
-                .cornerRadius(10)
-                .shadow(color: .gray.opacity(0.4), radius: 5, x: 0, y: 5)
+        VStack(spacing: 30) {
+            Image(systemName: "link.circle.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100)
+                .foregroundColor(.blue)
+                .shadow(color: .blue.opacity(0.3), radius: 10, x: 0, y: 5)
+            
+            Text("Connect Your Accounts")
+                .font(.title)
+                .fontWeight(.bold)
+                .multilineTextAlignment(.center)
+            
+            Text("Securely link your bank accounts using Plaid to get started with managing your finances.")
+                .font(.body)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
                 .padding(.horizontal)
-
-            TextField("Balance", text: $accountBalance)
+            
+            Button(action: {
+                let viewController = PlaidLinkViewController()
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = windowScene.windows.first {
+                    window.rootViewController?.present(viewController, animated: true, completion: nil)
+                }
+            }) {
+                HStack {
+                    Image(systemName: "lock.fill")
+                    Text("Connect with Plaid")
+                }
                 .padding()
-                .background(Color(UIColor.secondarySystemBackground))
-                .cornerRadius(10)
-                .shadow(color: .gray.opacity(0.4), radius: 5, x: 0, y: 5)
-                .keyboardType(.decimalPad)
-                .padding(.horizontal)
-
-            HStack {
-                Button("Cancel") {
-                    // Dismiss the view
-                    isSelected = false
-                }
-                .foregroundColor(.red)
-                .bold()
-                
-                Spacer()
-                
-                Button("Save") {
-                    if let balance = Double(accountBalance) {
-                        let newAccount = FinancialAccount(name: accountName, balance: balance)
-                        accounts.append(newAccount)
-                        // Dismiss the view
-                        isSelected = false
-                    }
-                }
-                .disabled(accountName.isEmpty || accountBalance.isEmpty)
-                .bold()
+                .frame(maxWidth: .infinity)
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(15)
+                .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
             }
-            .padding(20)
+            .padding(.horizontal)
+            
+            Button("Cancel") {
+                isSelected = false
+            }
+            .foregroundColor(.red)
+            .padding(.top)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(
+            Color(UIColor.systemBackground)
+                .edgesIgnoringSafeArea(.all)
+        )
+        .sheet(isPresented: $showPlaidLink) {
+            PlaidLinkView()
         }
     }
 }
