@@ -14,6 +14,7 @@
 		AC8ED4612C8578C400F19B3A /* ServerResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED4602C8578C400F19B3A /* ServerResponses.swift */; };
 		AC8ED46D2C857E8600F19B3A /* PlaidLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED46C2C857E8600F19B3A /* PlaidLinkViewController.swift */; };
 		AC8ED46F2C857F8A00F19B3A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED46E2C857F8A00F19B3A /* SceneDelegate.swift */; };
+		AC8ED4712C869A8100F19B3A /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED4702C869A8100F19B3A /* DummyData.swift */; };
 		ACA2D1572C7170E900447336 /* MoneyManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1562C7170E900447336 /* MoneyManagerApp.swift */; };
 		ACA2D1592C7170E900447336 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1582C7170E900447336 /* ContentView.swift */; };
 		ACA2D1832C71844100447336 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1822C71844100447336 /* Dashboard.swift */; };
@@ -48,6 +49,7 @@
 		AC8ED4602C8578C400F19B3A /* ServerResponses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerResponses.swift; sourceTree = "<group>"; };
 		AC8ED46C2C857E8600F19B3A /* PlaidLinkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaidLinkViewController.swift; sourceTree = "<group>"; };
 		AC8ED46E2C857F8A00F19B3A /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = "../../../plaid-tutorial/ios-swift/finished/client/SamplePlaidClient/SceneDelegate.swift"; sourceTree = "<group>"; };
+		AC8ED4702C869A8100F19B3A /* DummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
 		ACA2D1532C7170E900447336 /* MoneyManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoneyManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACA2D1562C7170E900447336 /* MoneyManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManagerApp.swift; sourceTree = "<group>"; };
 		ACA2D1582C7170E900447336 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				ACEB56702C7BBA63001AAEF4 /* AccountInformation.swift */,
+				AC8ED4702C869A8100F19B3A /* DummyData.swift */,
 			);
 			path = AccountsHelpers;
 			sourceTree = "<group>";
@@ -287,6 +290,7 @@
 				AC8ED4612C8578C400F19B3A /* ServerResponses.swift in Sources */,
 				AC8ED46F2C857F8A00F19B3A /* SceneDelegate.swift in Sources */,
 				ACA2D1592C7170E900447336 /* ContentView.swift in Sources */,
+				AC8ED4712C869A8100F19B3A /* DummyData.swift in Sources */,
 				ACA2D1852C71845000447336 /* Accounts.swift in Sources */,
 				ACA2D1832C71844100447336 /* Dashboard.swift in Sources */,
 				ACA2D1892C71866D00447336 /* Monthly.swift in Sources */,
