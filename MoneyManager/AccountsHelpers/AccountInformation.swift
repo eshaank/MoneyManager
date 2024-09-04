@@ -65,4 +65,3 @@ struct AddAccountSheet: View {
         return !name.isEmpty && !balance.isEmpty && Double(balance) != nil
     }
 }
-

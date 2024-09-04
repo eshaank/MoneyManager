@@ -163,8 +163,7 @@ struct CardView: View {
                         .foregroundColor(.blue)
                 }
             }
-        }
-        .padding(20)
+        }        .padding(20)
         .background(
             RoundedRectangle(cornerRadius: 20)
                 .fill(colorScheme == .dark ? Color.gray.opacity(0.2) : Color.white)
@@ -214,85 +213,73 @@ struct CardHeaderView: View {
 }
 
 struct ExpandedCardView: View {
+    @Environment(\.colorScheme) var colorScheme
     var cardTitle: String
     var balance: Double
     var geometry: GeometryProxy
     @Binding var showAccountTotals: Bool
-    //let accounts: [FinancialAccount]
     var onClose: () -> Void
-    
 
     var body: some View {
-        
-        VStack {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack{
-                    CardHeaderView(cardTitle: cardTitle, balance: balance, isSelected: true, showAccountTotals: $showAccountTotals)
-                    Spacer()
-                    VStack{
-                        Button(action: {
-                            onClose()
-                        }) {
-                            Text("close")
-                                .foregroundColor(.white)
-                                .font(Font.callout)
-                                .bold()
-                        }
-                    }
-                }
-                Text("Balance")
-                    .font(.title2)
-                    .bold()
-                    .foregroundColor(.white)
-                
-                Text("$\(balance, specifier: "%.2f")")
-                    .font(.title)
-                    .foregroundColor(.white)
-                
-                // Placeholder for "Recent Transactions"
-                Text("Recent Transactions")
-                    .font(.title2)
-                    .foregroundColor(.white)
-                    .padding(.top)
-                    .bold()
-
-                ScrollView(.vertical, showsIndicators: true){
-                    ForEach(0..<10) { transaction in
-                        HStack {
-                            Rectangle()
-                                .fill(Color.black.opacity(0.3))
-                                .frame(width: geometry.size.width / 1.5, height: geometry.size.height / 15)
-                                .cornerRadius(10)
-                            Spacer()
-                        }
-                        //.padding(.vertical, 5)
-                    }
-                }
-                
-
-                // Placeholder for "Spending Overview"
-                Text("Spending Overview")
-                    .font(.title2)
-                    .foregroundColor(.white)
-                    .bold()
-                    .padding(.top)
-
-                Rectangle()
-                    .fill(Color.white.opacity(0.3))
-                    .frame(height: geometry.size.height / 4)
-                    .cornerRadius(15)
-                
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
+                Text(cardTitle)
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .foregroundColor(colorScheme == .dark ? .white : .black)
                 Spacer()
+                Button(action: onClose) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.blue)
+                        .font(.system(size: 24))
+                }
             }
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(
-                LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .topLeading, endPoint: .bottomTrailing)
-            )
-            .cornerRadius(15)
-            .shadow(radius: 10)
-            .padding()
+            
+            Text("Available Balance")
+                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .foregroundColor(.gray)
+            
+            if showAccountTotals {
+                Text(formatBalance(balance))
+                    .font(.system(size: 24, weight: .semibold, design: .rounded))
+                    .foregroundColor(.green)
+            } else {
+                Text("••••••")
+                    .font(.system(size: 24, weight: .semibold, design: .rounded))
+                    .foregroundColor(.green)
+            }
+            
+            Text("Recent Transactions")
+                .font(.title2)
+                .fontWeight(.bold)
+                .padding(.top)
+            
+            ScrollView(.vertical, showsIndicators: true) {
+                ForEach(0..<10) { _ in
+                    HStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(Color.gray.opacity(0.2))
+                            .frame(height: geometry.size.height / 15)
+                        Spacer()
+                    }
+                }
+            }
+            
+            Text("Spending Overview")
+                .font(.title2)
+                .fontWeight(.bold)
+                .padding(.top)
+            
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color.gray.opacity(0.2))
+                .frame(height: geometry.size.height / 4)
         }
+        .padding(20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(colorScheme == .dark ? Color.gray.opacity(0.2) : Color.white)
+                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
+        )
         .gesture(
             DragGesture().onEnded { value in
                 if value.translation.height > 100 {
@@ -302,6 +289,13 @@ struct ExpandedCardView: View {
                 }
             }
         )
+    }
+    
+    private func formatBalance(_ balance: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "USD"
+        return formatter.string(from: NSNumber(value: balance)) ?? "$0.00"
     }
 }
 
