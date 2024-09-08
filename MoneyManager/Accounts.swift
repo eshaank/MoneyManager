@@ -19,10 +19,19 @@ struct Accounts: View {
 }
 
 struct AccountsPageView: View {
-    @State private var accountSections: [AccountSection] = DummyData.loadDummyAccounts()
+    @State private var accountSections: [AccountSection]
     @State private var showAccountTotals: Bool = true
     @State private var showPlaidLink: Bool = false
-    
+
+    init() {
+        let loadedAccounts = AccountsPageView.loadAccountsFromUserDefaults()
+        self._accountSections = State(initialValue: [
+            AccountSection(id: "creditCards", title: "Credit Cards", isExpanded: true, accounts: loadedAccounts.filter { $0.name.lowercased().contains("credit") }),
+            AccountSection(id: "savings", title: "Savings", isExpanded: true, accounts: loadedAccounts.filter { $0.name.lowercased().contains("saving") }),
+            AccountSection(id: "checking", title: "Checking", isExpanded: true, accounts: loadedAccounts.filter { $0.name.lowercased().contains("checking") })
+        ])
+    }
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -90,6 +99,16 @@ struct AccountsPageView: View {
                 // Handle success or error here if needed
             }
         }
+    }
+
+    private static func loadAccountsFromUserDefaults() -> [FinancialAccount] {
+        if let savedAccountsData = UserDefaults.standard.data(forKey: "savedAccounts") {
+            let decoder = JSONDecoder()
+            if let loadedAccounts = try? decoder.decode([FinancialAccount].self, from: savedAccountsData) {
+                return loadedAccounts
+            }
+        }
+        return []
     }
 }
 
@@ -279,15 +298,6 @@ struct ExpandedCardView: View {
             RoundedRectangle(cornerRadius: 20)
                 .fill(colorScheme == .dark ? Color.gray.opacity(0.2) : Color.white)
                 .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
-        )
-        .gesture(
-            DragGesture().onEnded { value in
-                if value.translation.height > 100 {
-                    withAnimation(.spring()) {
-                        onClose()
-                    }
-                }
-            }
         )
     }
     

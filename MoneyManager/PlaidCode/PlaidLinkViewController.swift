@@ -83,12 +83,20 @@ class PlaidLinkViewController: UIViewController {
                 let accounts = response.accounts.map { account in
                     FinancialAccount(name: account.name, balance: account.balances.current)
                 }
+                self.saveAccountsToUserDefaults(accounts) // Save accounts
                 self.dismissViewController(success: true, accounts: accounts)
             case .failure(let error):
                 print("Error fetching account info: \(error)")
                 let errorMessage = "Unable to fetch account information. Please try again later."
                 self.dismissViewController(success: false, accounts: nil, errorMessage: errorMessage)
             }
+        }
+    }
+    
+    private func saveAccountsToUserDefaults(_ accounts: [FinancialAccount]) {
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(accounts) {
+            UserDefaults.standard.set(encoded, forKey: "savedAccounts")
         }
     }
     

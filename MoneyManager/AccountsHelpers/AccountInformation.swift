@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - Models
 
-struct FinancialAccount: Identifiable {
+struct FinancialAccount: Identifiable, Codable {
     var id = UUID()
     var name: String
     var balance: Double
