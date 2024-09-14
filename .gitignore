@@ -8,3 +8,4 @@ MoneyManager/.DS_Store
 /ehthumbs.db
 /Thumbs.db
 server/.env
+.env

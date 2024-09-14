@@ -3,18 +3,11 @@ import LinkKit
 
 struct Accounts: View {
     @State private var accounts: [AccountGroup] = [
-        AccountGroup(type: "Credit Cards", accounts: [
-            FinancialAccount(name: "Apple Card", balance: 1024.45),
-            FinancialAccount(name: "Wells Fargo Active Cash", balance: 1342.53),
-        ]),
-        AccountGroup(type: "Savings", accounts: [
-            FinancialAccount(name: "Emergency Fund", balance: 5000),
-            FinancialAccount(name: "Vacation Savings", balance: 2500)
-        ]),
-        AccountGroup(type: "Checking", accounts: [
-            FinancialAccount(name: "Main Checking", balance: 3500),
-            FinancialAccount(name: "Joint Account", balance: 1200)
-        ])
+        AccountGroup(type: "Credit Card", accounts: []),
+        AccountGroup(type: "Checking", accounts: []),
+        AccountGroup(type: "Savings", accounts: []),
+        AccountGroup(type: "Investment", accounts: []),
+        AccountGroup(type: "Other", accounts: [])
     ]
     @State private var showAccountTotals: Bool = true
     @State private var selectedAccount: FinancialAccount?
@@ -31,33 +24,42 @@ struct Accounts: View {
                 }
                 .padding()
             }
-            .navigationTitle("Accounts")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showAccountTotals.toggle() }) {
-                        Image(systemName: showAccountTotals ? "eye" : "eye.slash")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showingAddOptions = true }) {
+                    Button(action: {
+                        showingPlaidLink = true // Show Plaid Link when the plus button is clicked
+                    }) {
                         Image(systemName: "plus")
                     }
                 }
             }
         }
-        .sheet(item: $selectedAccount) { account in
-            AccountDetailView(account: account)
-        }
-        .fullScreenCover(isPresented: $showingAddOptions) {
-            AddAccountView(isPresented: $showingAddOptions, connectAction: {
-                showingPlaidLink = true
-            }, manualEntryAction: {
-                // TODO: Implement manual entry
-                print("Enter manually tapped")
-            })
-        }
         .fullScreenCover(isPresented: $showingPlaidLink) {
-            PlaidLinkView(isPresented: $showingPlaidLink)
+            PlaidLinkView(isPresented: $showingPlaidLink) { plaidAccounts in
+                addPlaidAccounts(plaidAccounts)
+            }
+        }
+    }
+
+    func addPlaidAccounts(_ plaidAccounts: [Account]) {
+        for plaidAccount in plaidAccounts {
+            let accountType = plaidAccount.subtype ?? plaidAccount.type
+            let newAccount = FinancialAccount(
+                accountId: plaidAccount.accountId,
+                name: plaidAccount.name,
+                balance: plaidAccount.balances.current,
+                type: accountType
+            )
+            
+            if let index = accounts.firstIndex(where: { $0.type == accountType }) {
+                var updatedGroup = accounts[index]
+                var mutableAccounts = updatedGroup.accounts
+                mutableAccounts.append(newAccount)
+                updatedGroup = AccountGroup(type: updatedGroup.type, accounts: mutableAccounts)
+                accounts[index] = updatedGroup
+            } else {
+                accounts.append(AccountGroup(type: accountType, accounts: [newAccount]))
+            }
         }
     }
 }
@@ -76,7 +78,8 @@ struct AccountGroupView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(group.type)
-                .font(.headline)
+                .font(.title2)
+                .bold()
                 .padding(.leading)
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -109,7 +112,7 @@ struct AccountCardView: View {
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(.secondary)
             } else {
-                Text("••••")
+                Text("••••••••")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(.secondary)
             }
@@ -141,8 +144,10 @@ struct AccountDetailView: View {
 
 struct FinancialAccount: Identifiable {
     let id = UUID()
+    let accountId: String
     let name: String
     let balance: Double
+    let type: String
 }
 
 struct AddAccountOptionButton: View {
@@ -174,53 +179,17 @@ struct AddAccountOptionButton: View {
 
 struct PlaidLinkView: UIViewControllerRepresentable {
     @Binding var isPresented: Bool
+    var onAccountsLinked: ([Account]) -> Void
     
     func makeUIViewController(context: Context) -> UIViewController {
         let viewController = ViewController()
+        viewController.onAccountsLinked = { accounts in
+            onAccountsLinked(accounts)
+            isPresented = false
+        }
         return viewController
     }
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
 }
 
-struct AddAccountView: View {
-    @Binding var isPresented: Bool
-    var connectAction: () -> Void
-    var manualEntryAction: () -> Void
-
-    var body: some View {
-        VStack(spacing: 20) {
-            HStack {
-                Text("Add Account")
-                    .font(.title)
-                    .bold()
-                Spacer()
-                Button(action: { isPresented = false }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.gray)
-                        .font(.title)
-                }
-            }
-            .padding()
-
-            AddAccountOptionButton(title: "Connect with Plaid", iconName: "link") {
-                connectAction()
-                isPresented = false
-            }
-
-            AddAccountOptionButton(title: "Enter manually", iconName: "pencil") {
-                manualEntryAction()
-                isPresented = false
-            }
-
-            Spacer()
-        }
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(Color(.systemBackground))
-        .cornerRadius(20)
-        .shadow(radius: 10)
-        .padding(.horizontal)
-        .padding(.bottom, 50) // Space from the bottom
-    }
-}
