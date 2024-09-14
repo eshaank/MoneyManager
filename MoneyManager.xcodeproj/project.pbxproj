@@ -7,14 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC20EBE12C952362004B62C1 /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC20EBDA2C952360004B62C1 /* ServerCommunicator.swift */; };
+		AC20EBE22C952362004B62C1 /* TransactionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC20EBDB2C952361004B62C1 /* TransactionDetailViewController.swift */; };
+		AC20EBE32C952362004B62C1 /* TransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC20EBDC2C952361004B62C1 /* TransactionsViewController.swift */; };
+		AC20EBE42C952362004B62C1 /* ServerResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC20EBDD2C952361004B62C1 /* ServerResponses.swift */; };
+		AC20EBE52C952362004B62C1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC20EBDE2C952361004B62C1 /* ViewController.swift */; };
+		AC20EBE62C952362004B62C1 /* AccountsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC20EBDF2C952362004B62C1 /* AccountsViewController.swift */; };
+		AC20EBE72C952362004B62C1 /* TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC20EBE02C952362004B62C1 /* TransactionCell.swift */; };
+		AC20EBE92C95237D004B62C1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC20EBE82C95237D004B62C1 /* AppDelegate.swift */; };
 		AC67C89D2C854FDD00276A83 /* LinkKit in Frameworks */ = {isa = PBXBuildFile; productRef = AC67C89C2C854FDD00276A83 /* LinkKit */; };
-		AC8ED4512C855B3000F19B3A /* PlaidLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED4502C855B3000F19B3A /* PlaidLinkView.swift */; };
-		AC8ED4532C855B6000F19B3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED4522C855B6000F19B3A /* AppDelegate.swift */; };
-		AC8ED45F2C8578B300F19B3A /* ServerCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED45E2C8578B300F19B3A /* ServerCommunicator.swift */; };
-		AC8ED4612C8578C400F19B3A /* ServerResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED4602C8578C400F19B3A /* ServerResponses.swift */; };
-		AC8ED46D2C857E8600F19B3A /* PlaidLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED46C2C857E8600F19B3A /* PlaidLinkViewController.swift */; };
-		AC8ED46F2C857F8A00F19B3A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED46E2C857F8A00F19B3A /* SceneDelegate.swift */; };
-		AC8ED4712C869A8100F19B3A /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8ED4702C869A8100F19B3A /* DummyData.swift */; };
 		ACA2D1572C7170E900447336 /* MoneyManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1562C7170E900447336 /* MoneyManagerApp.swift */; };
 		ACA2D1592C7170E900447336 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1582C7170E900447336 /* ContentView.swift */; };
 		ACA2D1832C71844100447336 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1822C71844100447336 /* Dashboard.swift */; };
@@ -22,7 +23,6 @@
 		ACA2D1872C71863600447336 /* Investments.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1862C71863600447336 /* Investments.swift */; };
 		ACA2D1892C71866D00447336 /* Monthly.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D1882C71866D00447336 /* Monthly.swift */; };
 		ACA2D18B2C7295AC00447336 /* Playground.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA2D18A2C7295AC00447336 /* Playground.swift */; };
-		ACEB56712C7BBA63001AAEF4 /* AccountInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEB56702C7BBA63001AAEF4 /* AccountInformation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,13 +43,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AC8ED4502C855B3000F19B3A /* PlaidLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaidLinkView.swift; sourceTree = "<group>"; };
-		AC8ED4522C855B6000F19B3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		AC8ED45E2C8578B300F19B3A /* ServerCommunicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCommunicator.swift; sourceTree = "<group>"; };
-		AC8ED4602C8578C400F19B3A /* ServerResponses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerResponses.swift; sourceTree = "<group>"; };
-		AC8ED46C2C857E8600F19B3A /* PlaidLinkViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaidLinkViewController.swift; sourceTree = "<group>"; };
-		AC8ED46E2C857F8A00F19B3A /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = "../../../plaid-tutorial/ios-swift/finished/client/SamplePlaidClient/SceneDelegate.swift"; sourceTree = "<group>"; };
-		AC8ED4702C869A8100F19B3A /* DummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
+		AC20EBDA2C952360004B62C1 /* ServerCommunicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerCommunicator.swift; sourceTree = "<group>"; };
+		AC20EBDB2C952361004B62C1 /* TransactionDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDetailViewController.swift; sourceTree = "<group>"; };
+		AC20EBDC2C952361004B62C1 /* TransactionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionsViewController.swift; sourceTree = "<group>"; };
+		AC20EBDD2C952361004B62C1 /* ServerResponses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerResponses.swift; sourceTree = "<group>"; };
+		AC20EBDE2C952361004B62C1 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		AC20EBDF2C952362004B62C1 /* AccountsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountsViewController.swift; sourceTree = "<group>"; };
+		AC20EBE02C952362004B62C1 /* TransactionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
+		AC20EBE82C95237D004B62C1 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ACA2D1532C7170E900447336 /* MoneyManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoneyManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACA2D1562C7170E900447336 /* MoneyManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManagerApp.swift; sourceTree = "<group>"; };
 		ACA2D1582C7170E900447336 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -60,7 +61,6 @@
 		ACA2D1862C71863600447336 /* Investments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Investments.swift; sourceTree = "<group>"; };
 		ACA2D1882C71866D00447336 /* Monthly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monthly.swift; sourceTree = "<group>"; };
 		ACA2D18A2C7295AC00447336 /* Playground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playground.swift; sourceTree = "<group>"; };
-		ACEB56702C7BBA63001AAEF4 /* AccountInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInformation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,13 +89,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AC8ED45B2C85777B00F19B3A /* AccountsHelpers */ = {
+		AC20EBD92C95206C004B62C1 /* PlaidLinkCode */ = {
 			isa = PBXGroup;
 			children = (
-				ACEB56702C7BBA63001AAEF4 /* AccountInformation.swift */,
-				AC8ED4702C869A8100F19B3A /* DummyData.swift */,
+				AC20EBE82C95237D004B62C1 /* AppDelegate.swift */,
+				AC20EBDF2C952362004B62C1 /* AccountsViewController.swift */,
+				AC20EBDA2C952360004B62C1 /* ServerCommunicator.swift */,
+				AC20EBDD2C952361004B62C1 /* ServerResponses.swift */,
+				AC20EBE02C952362004B62C1 /* TransactionCell.swift */,
+				AC20EBDB2C952361004B62C1 /* TransactionDetailViewController.swift */,
+				AC20EBDC2C952361004B62C1 /* TransactionsViewController.swift */,
+				AC20EBDE2C952361004B62C1 /* ViewController.swift */,
 			);
-			path = AccountsHelpers;
+			path = PlaidLinkCode;
 			sourceTree = "<group>";
 		};
 		AC8ED45C2C8577A300F19B3A /* Unimplemented */ = {
@@ -108,19 +114,6 @@
 				ACA2D1882C71866D00447336 /* Monthly.swift */,
 			);
 			path = Unimplemented;
-			sourceTree = "<group>";
-		};
-		AC8ED45D2C85788E00F19B3A /* PlaidCode */ = {
-			isa = PBXGroup;
-			children = (
-				AC8ED46C2C857E8600F19B3A /* PlaidLinkViewController.swift */,
-				AC8ED46E2C857F8A00F19B3A /* SceneDelegate.swift */,
-				AC8ED4502C855B3000F19B3A /* PlaidLinkView.swift */,
-				AC8ED4522C855B6000F19B3A /* AppDelegate.swift */,
-				AC8ED4602C8578C400F19B3A /* ServerResponses.swift */,
-				AC8ED45E2C8578B300F19B3A /* ServerCommunicator.swift */,
-			);
-			path = PlaidCode;
 			sourceTree = "<group>";
 		};
 		ACA2D14A2C7170E900447336 = {
@@ -144,8 +137,7 @@
 		ACA2D1552C7170E900447336 /* MoneyManager */ = {
 			isa = PBXGroup;
 			children = (
-				AC8ED45D2C85788E00F19B3A /* PlaidCode */,
-				AC8ED45B2C85777B00F19B3A /* AccountsHelpers */,
+				AC20EBD92C95206C004B62C1 /* PlaidLinkCode */,
 				AC8ED45C2C8577A300F19B3A /* Unimplemented */,
 				ACA2D1842C71845000447336 /* Accounts.swift */,
 				ACA2D1562C7170E900447336 /* MoneyManagerApp.swift */,
@@ -287,21 +279,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC8ED4612C8578C400F19B3A /* ServerResponses.swift in Sources */,
-				AC8ED46F2C857F8A00F19B3A /* SceneDelegate.swift in Sources */,
+				AC20EBE72C952362004B62C1 /* TransactionCell.swift in Sources */,
 				ACA2D1592C7170E900447336 /* ContentView.swift in Sources */,
-				AC8ED4712C869A8100F19B3A /* DummyData.swift in Sources */,
 				ACA2D1852C71845000447336 /* Accounts.swift in Sources */,
+				AC20EBE92C95237D004B62C1 /* AppDelegate.swift in Sources */,
 				ACA2D1832C71844100447336 /* Dashboard.swift in Sources */,
+				AC20EBE12C952362004B62C1 /* ServerCommunicator.swift in Sources */,
+				AC20EBE32C952362004B62C1 /* TransactionsViewController.swift in Sources */,
+				AC20EBE22C952362004B62C1 /* TransactionDetailViewController.swift in Sources */,
+				AC20EBE52C952362004B62C1 /* ViewController.swift in Sources */,
 				ACA2D1892C71866D00447336 /* Monthly.swift in Sources */,
+				AC20EBE62C952362004B62C1 /* AccountsViewController.swift in Sources */,
+				AC20EBE42C952362004B62C1 /* ServerResponses.swift in Sources */,
 				ACA2D18B2C7295AC00447336 /* Playground.swift in Sources */,
 				ACA2D1572C7170E900447336 /* MoneyManagerApp.swift in Sources */,
-				AC8ED45F2C8578B300F19B3A /* ServerCommunicator.swift in Sources */,
-				ACEB56712C7BBA63001AAEF4 /* AccountInformation.swift in Sources */,
-				AC8ED4512C855B3000F19B3A /* PlaidLinkView.swift in Sources */,
-				AC8ED4532C855B6000F19B3A /* AppDelegate.swift in Sources */,
 				ACA2D1872C71863600447336 /* Investments.swift in Sources */,
-				AC8ED46D2C857E8600F19B3A /* PlaidLinkViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
